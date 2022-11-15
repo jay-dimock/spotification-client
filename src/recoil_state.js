@@ -44,6 +44,7 @@ const userIdSelector = selector({
 const playlistsState = atom({
   key: "playlistsState",
   default: [],
+  effects: [persistAtom],
 });
 
 export {

@@ -1,15 +1,12 @@
 import React from "react";
 import { API_BASE } from "../constants/EnvConstants";
+import Button from "@mui/material/Button";
 
 export const Login = () => {
   const endpoint = `${API_BASE}/auth/login`;
   return (
     <div className="login-form">
-      <h1>Grant Access to Spotify</h1>
-      <p>
-        Either this is your first time using this site, or your access grant has
-        expired.
-      </p>
+      <h1>Log In</h1>
       <p>
         You will be taken to a Spotify page to log in and agree to allow this
         site limited access to your account. We will NOT have any access to your
@@ -30,9 +27,9 @@ export const Login = () => {
         You must use a PAID Spotify account.{" "}
         <b>Free accounts won't work with this site.</b>
       </p>
-      <button type="link" className="btn btn-secondary">
+      <Button>
         <a href={endpoint}>Let's do this!</a>
-      </button>
+      </Button>
     </div>
   );
 };

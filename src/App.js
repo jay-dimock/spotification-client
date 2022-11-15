@@ -11,19 +11,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 const App = () => {
   return (
     <div className="App">
-      <PageWrapper>
+      <Router>
         <SpotifyApiEffect />
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <Router>
-            <Routes>
-              <Route exact path="/" element={<Home />} />
-              <Route exact path="/token" element={<Token />} />
-              <Route exact path="/login" element={<Login />} />
-              <Route exact path="/about" element={<About />} />
-            </Routes>
-          </Router>
-        </React.Suspense>
-      </PageWrapper>
+        <PageWrapper>
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route exact path="/token" element={<Token />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/about" element={<About />} />
+          </Routes>
+        </PageWrapper>
+      </Router>
     </div>
   );
 };
