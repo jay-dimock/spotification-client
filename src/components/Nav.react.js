@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "../images/logo.png";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userState, tokenSelector } from "../recoil_state";
+import { userState, tokenInfoState } from "../recoil_state";
 
 import {
   AppBar,
@@ -15,7 +15,7 @@ import {
 
 export const Nav = () => {
   const user = useRecoilValue(userState);
-  const token = useRecoilValue(tokenSelector);
+  const tokenInfo = useRecoilValue(tokenInfoState);
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -26,7 +26,7 @@ export const Nav = () => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Spotification
           </Typography>
-          {!user.id || !token ? (
+          {!user.id || !tokenInfo.access_token ? (
             <Button color="inherit">
               <a className="nav-link pl-2">login</a>
             </Button>

@@ -1,38 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
   busyState,
   userState,
-  tokenSelector,
-  userIdSelector,
+  tokenInfoState,
   playlistsState,
 } from "../recoil_state";
 
 export const Home = () => {
-  //const playlists = usePlaylists();
-  //console.log(playlists);
   const busy = useRecoilValue(busyState);
   const user = useRecoilValue(userState);
-  const userId = useRecoilValue(userIdSelector);
-  const token = useRecoilValue(tokenSelector);
+  const tokenInfo = useRecoilValue(tokenInfoState);
   const playlists = useRecoilValue(playlistsState);
 
-  if (!busy && (!token || !user.id)) {
+  if (!busy && (!tokenInfo.access_token || !user.id)) {
     return <Navigate to="/login" />;
   }
 
   return (
     <>
       <p>
-        Welcome, {user.display_name}: {userId}
+        Welcome, {user.display_name}: {user.id}
       </p>
       <p>total playlists:{playlists.length}</p>
-
-      {/* {busy ? <p>Loading...</p> : <p>Welcome, {user.display_name}: </p>} */}
-
-      {/* {!busy && !user?.id && <Navigate to="/login" />} */}
-
       <ul>
         {playlists.map((p) => (
           <li key={p.id}>{p.name}</li>

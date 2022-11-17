@@ -1,37 +1,105 @@
 import { useCallback, useEffect } from "react";
+import { API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
-import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   busyState,
   userState,
-  userIdSelector,
   tokenInfoState,
-  tokenSelector,
   playlistsState,
 } from "../recoil_state";
+import { tokenIsExpired } from "../util/tokenIsExpired";
+import { createTokenInfoObject } from "../util/createTokenInfoObject";
 
 // https://stackoverflow.com/questions/70718492/can-i-change-other-pieces-of-state-in-a-recoil-atom-effect
 export const SpotifyApiEffect = () => {
-  const token = useRecoilValue(tokenSelector);
-  const userId = useRecoilValue(userIdSelector);
-  const [, setUser] = useRecoilState(userState);
-  const [, setBusy] = useRecoilState(busyState);
+  const [tokenInfo, setTokenInfo] = useRecoilState(tokenInfoState);
+  const [user, setUser] = useRecoilState(userState);
+  const [busy, setBusy] = useRecoilState(busyState);
   const [, setPlaylists] = useRecoilState(playlistsState);
-  const resetTokenInfo = useResetRecoilState(tokenInfoState);
 
-  const populateSpotifyValues = useCallback(async () => {
-    if (!token) {
-      // todo: reset userInfo?
+  useEffect(() => {
+    if (busy || !tokenIsExpired(tokenInfo.expires_at)) {
       return;
     }
+    setBusy(true);
+    const endpoint = `${API_BASE}/auth/refresh?refresh_token=${tokenInfo.refresh_token}`;
+    axios
+      .get(endpoint)
+      .then((response) => {
+        console.log(response.data);
+        const info = createTokenInfoObject(
+          response.data,
+          tokenInfo.access_token,
+          tokenInfo.refresh_token
+        );
+        if (info) {
+          setTokenInfo(info);
+        }
+        setBusy(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setBusy(false);
+      });
+  }, [
+    busy,
+    setBusy,
+    setTokenInfo,
+    tokenInfo.access_token,
+    tokenInfo.expires_at,
+    tokenInfo.refresh_token,
+  ]);
+  // trying to refactor, but too tired...
+  //  useEffect(()=>{
+  //   if (!tokenInfo.access_token) {
+  //       return;
+  //     }
+  //   const headers = {
+  //       Authorization: "Bearer " + tokenInfo.access_token,
+  //     };
+  //   const getUserData = async () => {
+  //     const response = await axios.get("https://api.spotify.com/v1/me", {
+  //       headers,
+  //     });
+  //     const data = response.data;
+  //     console.log("display_name:", data.display_name);
+  //     console.log("user.id:", user.id);
+  //     console.log("data.id:", data.id);
+  //     const userChanged = user.id !== data.id;
+  //     setUser({
+  //       display_name: data.display_name,
+  //       id: data.id,
+  //       product: data.product,
+  //     });
+  //     if (userChanged) {
+  //       console.log("user changed. time to refetch playlists.");
+  //       //updatePlaylists();
+  //     } else {
+  //       console.log("user did not change.");
+  //       setBusy(false);
+  //       return;
+  //     }
+  //   }
+
+  //  })
+
+  const populateSpotifyValues = useCallback(async () => {
+    if (!tokenInfo.access_token) {
+      return;
+    }
+
     const headers = {
-      Authorization: "Bearer " + token,
+      Authorization: "Bearer " + tokenInfo.access_token,
     };
-    fetch("https://api.spotify.com/v1/me", { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("SpotifyApiEffect:", data.display_name);
-        const userChanged = userId !== data.id;
+    axios
+      .get("https://api.spotify.com/v1/me", { headers })
+      .then((response) => {
+        const data = response.data;
+        console.log("display_name:", data.display_name);
+        console.log("user.id:", user.id);
+        console.log("data.id:", data.id);
+        const userChanged = user.id !== data.id;
         setUser({
           display_name: data.display_name,
           id: data.id,
@@ -47,13 +115,13 @@ export const SpotifyApiEffect = () => {
       })
       .catch((error) => {
         console.log(error);
-        resetTokenInfo();
+        // resetTokenInfo();
         setBusy(false);
       });
 
     const updatePlaylists = () => {
       const headers = {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + tokenInfo.access_token,
       };
 
       const playlists = [];
@@ -63,7 +131,6 @@ export const SpotifyApiEffect = () => {
           .get(endpoint, { headers })
           .then((response) => {
             console.log(endpoint);
-            // console.log(response.data);
             populateList(response.data);
           })
           .catch((error) => {
@@ -105,7 +172,14 @@ export const SpotifyApiEffect = () => {
       const firstEndpoint = `https://api.spotify.com/v1/me/playlists?limit=${limit}`;
       getPlaylists(firstEndpoint);
     };
-  }, [token, setUser, userId, setBusy, resetTokenInfo, setPlaylists]);
+  }, [
+    setUser,
+    setBusy,
+    //resetTokenInfo,
+    setPlaylists,
+    user.id,
+    tokenInfo.access_token,
+  ]);
 
   useEffect(() => void populateSpotifyValues(), [populateSpotifyValues]);
   return null;

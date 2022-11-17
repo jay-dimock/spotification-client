@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 // https://portswigger.net/research/web-storage-the-lesser-evil-for-session-tokens
@@ -19,13 +19,13 @@ const tokenInfoState = atom({
   effects: [persistAtom],
 });
 
-const tokenSelector = selector({
-  key: "tokenSelector",
-  get: ({ get, getCallback }) => {
-    const tokenInfo = get(tokenInfoState);
-    return tokenInfo.access_token;
-  },
-});
+// const tokenSelector = selector({
+//   key: "tokenSelector",
+//   get: ({ get }) => {
+//     const tokenInfo = get(tokenInfoState);
+//     return tokenInfo.access_token;
+//   },
+// });
 
 const userState = atom({
   key: "userState",
@@ -33,13 +33,13 @@ const userState = atom({
   effects: [persistAtom],
 });
 
-const userIdSelector = selector({
-  key: "userIdSelector",
-  get: ({ get }) => {
-    const user = get(userState);
-    return user.id;
-  },
-});
+// const userIdSelector = selector({
+//   key: "userIdSelector",
+//   get: ({ get }) => {
+//     const user = get(userState);
+//     return user.id;
+//   },
+// });
 
 const playlistsState = atom({
   key: "playlistsState",
@@ -47,11 +47,4 @@ const playlistsState = atom({
   effects: [persistAtom],
 });
 
-export {
-  busyState,
-  tokenSelector,
-  userIdSelector,
-  tokenInfoState,
-  userState,
-  playlistsState,
-};
+export { busyState, tokenInfoState, userState, playlistsState };
