@@ -19,27 +19,16 @@ const tokenInfoState = atom({
   effects: [persistAtom],
 });
 
-// const tokenSelector = selector({
-//   key: "tokenSelector",
-//   get: ({ get }) => {
-//     const tokenInfo = get(tokenInfoState);
-//     return tokenInfo.access_token;
-//   },
-// });
-
 const userState = atom({
   key: "userState",
-  default: { id: null, display_name: null },
+  default: {
+    id: null,
+    display_name: null,
+    product: null,
+    image_url: null,
+  },
   effects: [persistAtom],
 });
-
-// const userIdSelector = selector({
-//   key: "userIdSelector",
-//   get: ({ get }) => {
-//     const user = get(userState);
-//     return user.id;
-//   },
-// });
 
 const playlistsState = atom({
   key: "playlistsState",

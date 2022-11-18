@@ -32,10 +32,15 @@ export const useLoadInitialSpotifyData = () => {
         console.log(data);
         if (data?.id && data?.display_name) {
           console.log("fetched user data");
+          let imageUrl = null;
+          if (data.images && data.images.length > 0) {
+            imageUrl = data.images[0].url;
+          }
           return {
             display_name: data.display_name,
             id: data.id,
             product: data.product,
+            image_url: imageUrl,
           };
         }
         return null;

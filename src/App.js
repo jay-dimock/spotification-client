@@ -5,14 +5,12 @@ import { Login } from "./components/Login.react";
 import { About } from "./components/About.react";
 import { Token } from "./components/Token.react";
 import { Home } from "./components/Home.react";
-import { SpotifyApiEffect } from "./components/SpotifyApiEffect.react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
   return (
     <div className="App">
       <Router>
-        {/* <SpotifyApiEffect /> */}
         <PageWrapper>
           <Routes>
             <Route exact path="/" element={<Home />} />
