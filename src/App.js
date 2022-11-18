@@ -12,7 +12,7 @@ const App = () => {
   return (
     <div className="App">
       <Router>
-        <SpotifyApiEffect />
+        {/* <SpotifyApiEffect /> */}
         <PageWrapper>
           <Routes>
             <Route exact path="/" element={<Home />} />

@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import queryString from "query-string";
 import { Navigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { tokenInfoState } from "../recoil_state";
 import { createTokenInfoObject } from "../util/createTokenInfoObject";
+import { useLoadInitialSpotifyData } from "../services/useLoadInitialSpotifyData";
 
 export const Token = () => {
-  const [tokenInfo, setTokenInfo] = useRecoilState(tokenInfoState);
-  const params = queryString.parse(window.location.search);
+  const tokenInfo = useRecoilValue(tokenInfoState);
   const [loading, setLoading] = useState(true);
+  const params = queryString.parse(window.location.search);
 
-  useEffect(() => {
-    const info = createTokenInfoObject(
-      params,
-      tokenInfo.access_token,
-      tokenInfo.refresh_token
-    );
-    if (info) {
-      setTokenInfo(info);
-    }
-    setLoading(false);
-  }, [params, setTokenInfo, tokenInfo.access_token, tokenInfo.refresh_token]);
+  const info = createTokenInfoObject(
+    params,
+    tokenInfo.access_token,
+    tokenInfo.refresh_token
+  );
 
-  if (!loading && !params?.access_token && !tokenInfo.access_token) {
-    return <Navigate to="/login" />;
+  const loadData = useLoadInitialSpotifyData();
+  if (loading) {
+    loadData(info).then(setLoading(false));
   }
-  return <Navigate to="/" />;
+
+  if (loading) {
+    console.log("LOADING");
+  }
+
+  return <>{loading ? <div>Loading...</div> : <Navigate to="/" />}</>;
 };
