@@ -46,7 +46,7 @@ export const Nav = () => {
               <div>
                 <Typography>{user.display_name}</Typography>
                 <Typography variant="subtitle2" onClick={logout}>
-                  <Link to="/login">Not you?</Link>
+                  <Link to="/login">Log out</Link>
                 </Typography>
               </div>
             </Stack>

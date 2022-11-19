@@ -1,7 +1,8 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState, tokenInfoState, playlistsState } from "../recoil_state";
+import { Playlists } from "./Playlists.react";
 
 export const Home = () => {
   const user = useRecoilValue(userState);
@@ -9,21 +10,16 @@ export const Home = () => {
   const playlists = useRecoilValue(playlistsState);
 
   if (!tokenInfo.access_token || !user.id) {
-    console.log("NAV TO LOGIN FROM HOME");
-    return <Navigate to="/login" />;
+    return (
+      <>
+        <p>
+          You are not logged in. Either your session has expired, or something
+          went wrong during the login process.
+        </p>
+        <Link to="/login">Log in</Link>
+      </>
+    );
   }
 
-  return (
-    <>
-      <p>
-        Welcome, {user.display_name}: {user.id}
-      </p>
-      <p>total playlists:{playlists.length}</p>
-      <ul>
-        {playlists.map((p) => (
-          <li key={p.id}>{p.name}</li>
-        ))}
-      </ul>
-    </>
-  );
+  return <Playlists />;
 };

@@ -11,25 +11,25 @@ a:hover {
   color: #28a745;
 }
 
-.navbar {
+/* .navbar {
   background-color: black;
   color: white;
-}
+} */
 
-.brand-header {
+/* .brand-header {
   background-color: black;
   color: white;
   font-size: 1.3rem;
-}
+} */
 
-.nav-link {
+/* .nav-link {
   font-size: 1.1rem;
   color: #34de5b;
-}
+} */
 
-.nav-link:hover {
+/* .nav-link:hover {
   color: #3cff69;
-}
+} */
 
 #menu-divider {
   border-bottom: 1px solid #28a745;
@@ -52,26 +52,9 @@ a:hover {
 }
 
 .container-inner {
-  background-color: white;
+  background-color: rgb(82, 82, 82);
   padding: 20px;
   /* border-radius:10px; */
-}
-
-form {
-  background-color: white;
-  /* padding:20px; */
-  /* border-radius:10px; */
-}
-
-form.minimal {
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-}
-
-label {
-  padding: 0;
-  margin: 0;
 }
 
 /* The Modal (background) */
@@ -109,13 +92,13 @@ label {
 }
 
 /* The Close Button */
-#close {
+/* #close {
   color: white;
   font-size: 28px;
   font-weight: bold;
   display: inline;
   padding: 0 15px;
-}
+} */
 
 #close:hover,
 #close:focus {
@@ -132,14 +115,22 @@ label {
   padding: 15px;
 }
 
-.table-responsive {
-  max-height: 600px;
+::-webkit-scrollbar {
+  width: 20px;
 }
 
-.container-inner.login-form {
-  max-width: 600px;
-  margin: 0 auto;
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
   border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #28a745;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1e7b34;
 }
 
 @media only screen and (max-width: 600px) {

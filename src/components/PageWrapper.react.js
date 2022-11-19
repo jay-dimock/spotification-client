@@ -1,11 +1,11 @@
 import { Nav } from "./Nav.react.js";
 import React from "react";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-//import { black } from "@mui/material/colors";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: { main: "#000000" },
+    secondary: { main: "#d9d9d9" },
   },
 });
 
