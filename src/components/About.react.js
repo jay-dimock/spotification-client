@@ -4,7 +4,7 @@ import React from "react";
 
 export const About = () => {
   return (
-    <>
+    <div className="container-inner">
       <h3>Welcome to Spotification!</h3>
       <p>
         This site connects to your personal Spotify account and provides two
@@ -28,6 +28,6 @@ export const About = () => {
       <button type="submit" className="btn btn-secondary" onClick={() => {}}>
         <Link to="/login">Continue</Link>
       </button>
-    </>
+    </div>
   );
 };

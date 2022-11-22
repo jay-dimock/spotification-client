@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 export const Login = () => {
   const endpoint = `${API_BASE}/auth/login`;
   return (
-    <div className="login-form">
+    <div className="container-inner">
       <h1>Log In</h1>
       <p>
         You will be taken to a Spotify page to log in and agree to allow this

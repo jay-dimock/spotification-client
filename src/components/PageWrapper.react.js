@@ -13,9 +13,7 @@ export const PageWrapper = (props) => {
   return (
     <ThemeProvider theme={theme}>
       <Nav />
-      <div className="container-fluid">
-        <div className="container-inner">{props.children}</div>
-      </div>
+      <div className="container-fluid">{props.children}</div>
     </ThemeProvider>
   );
 };

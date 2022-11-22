@@ -10,16 +10,16 @@ export const useLoadInitialSpotifyData = () => {
 
   return useCallback(
     async (newTokenInfo) => {
-      console.log("tokenInfo.access_token", tokenInfo.access_token);
+      // console.log("tokenInfo.access_token", tokenInfo.access_token);
       if (
         !newTokenInfo ||
         !newTokenInfo.access_token ||
         newTokenInfo.access_token === tokenInfo.access_token
       ) {
-        console.log("nothing needs doing");
+        // console.log("nothing needs doing");
         return false;
       }
-      console.log("getting data...");
+      // console.log("getting data...");
       const headers = {
         Authorization: "Bearer " + newTokenInfo.access_token,
       };
@@ -29,9 +29,8 @@ export const useLoadInitialSpotifyData = () => {
           headers,
         });
         const data = await response.data;
-        console.log(data);
+        // console.log(data);
         if (data?.id && data?.display_name) {
-          console.log("fetched user data");
           let imageUrl = null;
           if (data.images && data.images.length > 0) {
             imageUrl = data.images[0].url;
@@ -53,7 +52,7 @@ export const useLoadInitialSpotifyData = () => {
           await axios
             .get(endpoint, { headers })
             .then((response) => {
-              console.log(endpoint);
+              // console.log(endpoint);
               populateList(response.data);
             })
             .catch((error) => {
@@ -67,11 +66,23 @@ export const useLoadInitialSpotifyData = () => {
           }
           // remove podcasts, etc:
           const chunk = data.items.filter((p) => p.type === "playlist");
+          //console.log(chunk);
           const map = chunk.map((p) => {
+            if (p.name === "80s Mellow Mix") {
+              console.log(p);
+              console.log({
+                id: p.id,
+                name: p.name,
+                owner_name: p.owner.display_name,
+                owner_id: p.owner.id,
+                total_tracks: p.tracks.total,
+              });
+            }
             return {
               id: p.id,
               name: p.name,
-              owner: p.owner.name,
+              owner_name: p.owner.display_name,
+              owner_id: p.owner.id,
               total_tracks: p.tracks.total,
             };
           });
@@ -83,7 +94,7 @@ export const useLoadInitialSpotifyData = () => {
             playlists.sort((a, b) =>
               a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             );
-            console.log("populateList - playlists", playlists);
+            // console.log("populateList - playlists", playlists);
             setPlaylists(playlists);
           }
         };
