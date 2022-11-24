@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import queryString from "query-string";
 import { Navigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { tokenInfoState } from "../recoil_state";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { viewState, tokenInfoState } from "../recoil_state";
 import { createTokenInfoObject } from "../util/createTokenInfoObject";
 import { useLoadInitialSpotifyData } from "../services/useLoadInitialSpotifyData";
+import { ABOUT } from "../constants/ViewConstants";
 
 export const Token = () => {
   const tokenInfo = useRecoilValue(tokenInfoState);
+  const [, setView] = useRecoilState(viewState);
   const [loading, setLoading] = useState(true);
   const params = queryString.parse(window.location.search);
 
@@ -19,11 +21,10 @@ export const Token = () => {
 
   const loadData = useLoadInitialSpotifyData();
   if (loading) {
-    loadData(info).then(setLoading(false));
-  }
-
-  if (loading) {
-    console.log("LOADING");
+    loadData(info).then(() => {
+      setView(ABOUT);
+      setLoading(false);
+    });
   }
 
   return <>{loading ? <div>Loading...</div> : <Navigate to="/" />}</>;

@@ -1,12 +1,14 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { ABOUT } from "./constants/ViewConstants";
 
 // https://portswigger.net/research/web-storage-the-lesser-evil-for-session-tokens
 const { persistAtom } = recoilPersist();
 
-const busyState = atom({
-  key: "busyState",
-  default: false,
+const viewState = atom({
+  key: "viewState",
+  default: ABOUT,
+  effects: [persistAtom],
 });
 
 const tokenInfoState = atom({
@@ -36,4 +38,4 @@ const playlistsState = atom({
   effects: [persistAtom],
 });
 
-export { busyState, tokenInfoState, userState, playlistsState };
+export { viewState, tokenInfoState, userState, playlistsState };

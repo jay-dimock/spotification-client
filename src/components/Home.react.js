@@ -1,25 +1,31 @@
-import React from "react";
-import { Navigate, Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userState, tokenInfoState, playlistsState } from "../recoil_state";
+import React, { useEffect } from "react";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { viewState, tokenInfoState } from "../recoil_state";
 import { Playlists } from "./Playlists.react";
+import { About } from "./About.react";
+import { FAQ as FAQPage } from "./FAQ.react";
+import { ABOUT, MANAGE, FAQ } from "../constants/ViewConstants";
 
 export const Home = () => {
-  const user = useRecoilValue(userState);
   const tokenInfo = useRecoilValue(tokenInfoState);
-  const playlists = useRecoilValue(playlistsState);
+  const [view, setView] = useRecoilState(viewState);
 
-  if (!tokenInfo.access_token || !user.id) {
-    return (
-      <>
-        <p>
-          You are not logged in. Either your session has expired, or something
-          went wrong during the login process.
-        </p>
-        <Link to="/login">Log in</Link>
-      </>
-    );
-  }
+  useEffect(() => {
+    if (!tokenInfo.access_token && view === MANAGE) {
+      setView(ABOUT);
+    }
+  });
 
-  return <Playlists />;
+  const getView = () => {
+    switch (view) {
+      case MANAGE:
+        return <Playlists />;
+      case FAQ:
+        return <FAQPage />;
+      default:
+        return <About />;
+    }
+  };
+
+  return getView();
 };

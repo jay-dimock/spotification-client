@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import { Navigate, Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState, playlistsState } from "../recoil_state";
 import { People } from "@mui/icons-material";
@@ -8,7 +7,7 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "./Accordion.react";
-import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
 
 export const Playlists = () => {
   const user = useRecoilValue(userState);
@@ -59,13 +58,11 @@ export const Playlists = () => {
                   <Typography variant="subtitle2">
                     Owned by {p.owner_name}
                   </Typography>
-                  <Typography variant="subtitle2">
-                    <a href="#">Make it mine!</a>
-                  </Typography>
+                  <Link variant="subtitle2">Make it mine!</Link>
                 </div>
               )}
               <Typography variant="subtitle2">
-                Belongs to 2 groups ( <a href="#">view / edit</a> )
+                Belongs to 2 groups ( <Link>view / edit</Link> )
               </Typography>
             </AccordionDetails>
           </CustomAccordion>

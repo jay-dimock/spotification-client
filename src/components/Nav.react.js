@@ -1,9 +1,14 @@
 import React from "react";
 import { API_BASE } from "../constants/EnvConstants";
 import logo from "../images/logo.png";
-import { Link } from "react-router-dom";
-import { useRecoilValue, useResetRecoilState } from "recoil";
-import { userState, tokenInfoState, playlistsState } from "../recoil_state";
+import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
+import {
+  viewState,
+  userState,
+  tokenInfoState,
+  playlistsState,
+} from "../recoil_state";
+import { FAQ, MANAGE } from "../constants/ViewConstants";
 
 import {
   AppBar,
@@ -13,6 +18,7 @@ import {
   Typography,
   Avatar,
   Stack,
+  Link,
 } from "@mui/material";
 
 export const Nav = () => {
@@ -21,6 +27,7 @@ export const Nav = () => {
   const resetTokenInfo = useResetRecoilState(tokenInfoState);
   const resetUser = useResetRecoilState(userState);
   const resetPlaylists = useResetRecoilState(playlistsState);
+  const [view, setView] = useRecoilState(viewState);
 
   const logout = () => {
     resetTokenInfo();
@@ -29,7 +36,7 @@ export const Nav = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="secondary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton>
@@ -39,14 +46,28 @@ export const Nav = () => {
             Spotification
           </Typography>
           {!user.id || !tokenInfo.access_token ? (
-            <a href={`${API_BASE}/auth/login`}>Log In</a>
+            <Link href={`${API_BASE}/auth/login`}>Connect to Spotify</Link>
           ) : (
             <Stack direction="row" spacing={2}>
               <Avatar alt={user.display_name} src={user.image_url} />
               <div>
                 <Typography>{user.display_name}</Typography>
-                <Typography variant="subtitle2" onClick={logout}>
-                  <Link to="/login">Log out</Link>
+                <Typography variant="subtitle2">
+                  {view !== FAQ && (
+                    <Link component="button" onClick={() => setView(FAQ)}>
+                      FAQ
+                    </Link>
+                  )}
+                  {view === FAQ && (
+                    <Link component="button" onClick={() => setView(MANAGE)}>
+                      Manage
+                    </Link>
+                  )}
+
+                  {" | "}
+                  <Link component="button" onClick={logout}>
+                    Disconnect
+                  </Link>
                 </Typography>
               </div>
             </Stack>

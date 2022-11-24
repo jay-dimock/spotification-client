@@ -3,14 +3,6 @@
   box-sizing: border-box;
 }
 
-a {
-  color: #28a745;
-}
-
-a:hover {
-  color: #28a745;
-}
-
 #menu-divider {
   border-bottom: 2px solid #28a745;
   padding: 0;
@@ -121,12 +113,12 @@ a:hover {
   background: #1e7b34;
 }
 
-/* @media only screen and (max-width: 600px) {
-  .container-inner.login-form {
+@media only screen and (max-width: 600px) {
+  .container-inner {
     max-width: 600px;
     border-radius: 0;
   }
-} */
+}
 
 @media only screen and (min-width: 970px) {
   .container-fluid {

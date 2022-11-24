@@ -1,11 +1,6 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import { ArrowForwardIosSharp } from "@mui/icons-material";
-// import {
-//   MuiAccordion,
-//   MuiAccordionSummary,
-//   MuiAccordionDetails,
-// } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
