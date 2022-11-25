@@ -11,9 +11,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 export const FAQ = () => {
   return (
     <div className="container-main">
-      <h2>Frequently Asked Questions</h2>
+      <Typography variant="h5" color="white" mb={1} mx={2}>
+        Frequently Asked Questions
+      </Typography>
       {content.map((c, i) => (
-        <Accordion key={i}>
+        <Accordion className="small-screen" key={i}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="privacy-policy-content"

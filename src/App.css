@@ -118,6 +118,12 @@
     max-width: 600px;
     border-radius: 0;
   }
+  .container-main {
+    max-width: 600px;
+    border-radius: 0;
+    margin: 0 auto;
+    padding: 0;
+  }
 }
 
 @media only screen and (min-width: 970px) {

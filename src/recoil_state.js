@@ -38,4 +38,10 @@ const playlistsState = atom({
   effects: [persistAtom],
 });
 
-export { viewState, tokenInfoState, userState, playlistsState };
+const groupsState = atom({
+  key: "groupsState",
+  default: [],
+  effects: [persistAtom],
+});
+
+export { viewState, tokenInfoState, userState, playlistsState, groupsState };

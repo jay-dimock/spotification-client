@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userState, playlistsState } from "../recoil_state";
+import { userState, playlistsState, groupsState } from "../recoil_state";
 import { People } from "@mui/icons-material";
 import {
   CustomAccordion,
   AccordionSummary,
   AccordionDetails,
 } from "./Accordion.react";
-import { Box, Typography, Link } from "@mui/material";
+import { AddGroupToPlaylist } from "./AddGroupToPlaylist.react";
+import { Box, Typography, Link, List, ListItem } from "@mui/material";
 
 export const Playlists = () => {
   const user = useRecoilValue(userState);
   const playlists = useRecoilValue(playlistsState);
+  const groups = useRecoilValue(groupsState);
   const [expandedPlaylistId, setExpandedPlaylistId] = useState(null);
 
   return (
@@ -23,8 +25,8 @@ export const Playlists = () => {
         borderColor="#28a745"
         sx={{
           width: "100%",
-          maxWidth: 300,
-          maxHeight: 400,
+          maxWidth: 400,
+          maxHeight: 500,
           backgroundColor: "white",
           color: "black",
           overflow: "auto",
@@ -52,18 +54,22 @@ export const Playlists = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="subtitle2">{`${p.total_tracks} tracks`}</Typography>
+              <Typography
+                variant="subtitle2"
+                paddingBottom={1}
+              >{`${p.total_tracks} tracks`}</Typography>
               {p.owner_id !== user.id && (
-                <div>
-                  <Typography variant="subtitle2">
-                    Owned by {p.owner_name}
-                  </Typography>
-                  <Link variant="subtitle2">Make it mine!</Link>
-                </div>
+                <Typography variant="subtitle2" paddingBottom={1}>
+                  Owned by {p.owner_name} <Link variant="subtitle2">copy</Link>
+                </Typography>
               )}
-              <Typography variant="subtitle2">
-                Belongs to 2 groups ( <Link>view / edit</Link> )
+              <Typography variant="subtitle2" paddingBottom={1}>
+                Groups:
+                <List sx={{ paddingY: 0 }}>
+                  <ListItem sx={{ paddingY: 0 }}></ListItem>
+                </List>
               </Typography>
+              <AddGroupToPlaylist />
             </AccordionDetails>
           </CustomAccordion>
         ))}

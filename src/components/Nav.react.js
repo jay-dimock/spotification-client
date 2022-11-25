@@ -7,6 +7,7 @@ import {
   userState,
   tokenInfoState,
   playlistsState,
+  groupsState,
 } from "../recoil_state";
 import { FAQ, MANAGE } from "../constants/ViewConstants";
 
@@ -27,12 +28,14 @@ export const Nav = () => {
   const resetTokenInfo = useResetRecoilState(tokenInfoState);
   const resetUser = useResetRecoilState(userState);
   const resetPlaylists = useResetRecoilState(playlistsState);
+  const resetGroups = useResetRecoilState(groupsState);
   const [view, setView] = useRecoilState(viewState);
 
   const logout = () => {
     resetTokenInfo();
     resetUser();
     resetPlaylists();
+    resetGroups();
   };
 
   return (
@@ -63,7 +66,6 @@ export const Nav = () => {
                       Manage
                     </Link>
                   )}
-
                   {" | "}
                   <Link component="button" onClick={logout}>
                     Disconnect
