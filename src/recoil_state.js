@@ -38,27 +38,10 @@ const playlistsState = atom({
   effects: [persistAtom],
 });
 
-const sortedPlaylistsState = selector({
-  key: "sortedPlaylistsState",
-  get: ({ get }) => {
-    const playlists = get(playlistsState);
-    return Object.values(playlists).sort((a, b) =>
-      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-    );
-  },
-});
-
 const groupsState = atom({
   key: "groupsState",
   default: {},
   effects: [persistAtom],
 });
 
-export {
-  viewState,
-  tokenInfoState,
-  userState,
-  playlistsState,
-  sortedPlaylistsState,
-  groupsState,
-};
+export { viewState, tokenInfoState, userState, playlistsState, groupsState };

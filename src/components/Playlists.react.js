@@ -17,7 +17,7 @@ export const Playlists = () => {
   const groups = useRecoilValue(groupsState);
   const [expandedPlaylistId, setExpandedPlaylistId] = useState(null);
 
-  //  console.log(playlists);
+  //console.log(playlists);
   //console.log(Object.values(playlists));
 
   return (
@@ -41,8 +41,8 @@ export const Playlists = () => {
       >
         {Object.values(playlists).map((p) => (
           <CustomAccordion
-            key={p.spotifyId}
-            id={p.spotifyId}
+            key={p.spotify_id}
+            id={p.spotify_id}
             expandedId={expandedPlaylistId}
             setExpandedId={setExpandedPlaylistId}
           >
@@ -53,7 +53,7 @@ export const Playlists = () => {
               <Typography
                 pl={1}
                 fontWeight={
-                  expandedPlaylistId === p.spotifyId ? "bold" : "normal"
+                  expandedPlaylistId === p.spotify_id ? "bold" : "normal"
                 }
               >
                 {p.name}
@@ -75,7 +75,7 @@ export const Playlists = () => {
                   <ListItem sx={{ paddingY: 0 }}></ListItem>
                 </List>
               </Typography>
-              <AddGroupToPlaylist />
+              <AddGroupToPlaylist playlistId={p.spotify_id} />
             </AccordionDetails>
           </CustomAccordion>
         ))}

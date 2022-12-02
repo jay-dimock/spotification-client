@@ -17,7 +17,6 @@ export const useLoadInitialSpotifyData = () => {
 
   return useCallback(
     async (newTokenInfo) => {
-      // console.log("tokenInfo.access_token", tokenInfo.access_token);
       if (
         !newTokenInfo ||
         !newTokenInfo.access_token ||
@@ -79,7 +78,10 @@ export const useLoadInitialSpotifyData = () => {
           const chunk = data.items.filter((p) => p.type === "playlist");
           //console.log(chunk);
           const map = chunk.map((p) => {
-            const isGroup = groupData.groups && groupData.groups.has(p.id);
+            const isGroup = groupData.groups && groupData.groups[p.id] != null;
+            if (p.id === "1Osl5Wo118qBElD9r5U8Ui") {
+              console.log(p.name + " isGroup: ", isGroup);
+            }
             if (isGroup) {
               groups[p.id] = {
                 spotifyId: p.id,
@@ -90,13 +92,13 @@ export const useLoadInitialSpotifyData = () => {
             }
 
             return {
-              spotifyId: p.id,
+              spotify_id: p.id,
               name: p.name,
               owner_name: p.owner.display_name,
               owner_id: p.owner.id,
               total_tracks: p.tracks.total,
-              groupIds:
-                groupData.playlists && groupData.playlists.has(p.id)
+              group_ids:
+                groupData.playlists[p.id] != null
                   ? groupData.playlists[p.id]
                   : [],
             };
@@ -109,9 +111,13 @@ export const useLoadInitialSpotifyData = () => {
             playlists.sort((a, b) =>
               a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             );
-            // console.log("populateList - playlists", playlists);
+            //console.log("populateList - playlists", playlists);
+
             setPlaylists(
-              Object.fromEntries(playlists.map((p) => [p.spotifyId, p]))
+              Object.fromEntries(
+                // remove undefined & convert to dictionary
+                playlists.filter((p) => p).map((p) => [p.spotify_id, p])
+              )
             );
             setGroups(groups);
           }
@@ -132,7 +138,7 @@ export const useLoadInitialSpotifyData = () => {
           axios
             .get(`${API_BASE}/groups/${user.id}`)
             .then((groupData) => {
-              loadPlaylists(groupData)
+              loadPlaylists(groupData.data)
                 .then(console.log("finished loading playlists"))
                 .catch(console.error);
             })

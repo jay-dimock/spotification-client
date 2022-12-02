@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
+import { userState, playlistsState, groupsState } from "../recoil_state";
 import { tokenInfoState } from "../recoil_state";
 import {
   Input,
@@ -15,11 +16,12 @@ import {
   TextField,
 } from "@mui/material";
 
-export const AddGroupToPlaylist = () => {
+export const AddGroupToPlaylist = (props) => {
   const [group, setGroup] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const [inputErrorMessage, setInputErrorMessage] = useState("");
   const tokenInfo = useRecoilValue(tokenInfoState);
+  const groups = useRecoilValue(groupsState);
 
   const handleGroupChange = (event) => {
     if (event.target.value === "new") {
@@ -50,7 +52,7 @@ export const AddGroupToPlaylist = () => {
     };
 
     const payload = {
-      name: "Spotification Group ~ " + trimmed,
+      name: "Spotification ~ " + trimmed,
       public: false,
       description:
         "This playlist was created on the Spotification " +
@@ -68,7 +70,7 @@ export const AddGroupToPlaylist = () => {
         const apiPayload = {
           spotifyId: res.data.id,
           userId: res.owner.id,
-          spotifyPlaylistIds: [],
+          spotifyPlaylistIds: [props.playlistId],
         };
         axios.post(`${API_BASE}/groups`);
       })
@@ -96,9 +98,12 @@ export const AddGroupToPlaylist = () => {
               <em>None</em>
             </Typography>
           </MenuItem>
-          <MenuItem value={10}>
-            <Typography variant="subtitle2">Ten</Typography>
-          </MenuItem>
+          {Object.values(groups).map((g) => (
+            <MenuItem key={g.spotifyId} value={g.spotifyId}>
+              <Typography variant="subtitle2">{g.name}</Typography>
+            </MenuItem>
+          ))}
+
           <MenuItem value={20}>
             <Typography variant="subtitle2">Twenty</Typography>
           </MenuItem>
