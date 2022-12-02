@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { tokenInfoState } from "../recoil_state";
 import {
   Input,
   InputLabel,
@@ -15,6 +19,7 @@ export const AddGroupToPlaylist = () => {
   const [group, setGroup] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const [inputErrorMessage, setInputErrorMessage] = useState("");
+  const tokenInfo = useRecoilValue(tokenInfoState);
 
   const handleGroupChange = (event) => {
     if (event.target.value === "new") {
@@ -35,8 +40,39 @@ export const AddGroupToPlaylist = () => {
       setInputErrorMessage("New group name cannot be blank");
       return;
     }
+    // todo: check no playlist exists with this name
     // todo: build a useCreateGroup hook and call it here
     // send in a callback to add this playlist to the group afterward
+    //const response = axios.post(`${API_BASE}/groups`)
+
+    const headers = {
+      Authorization: "Bearer " + tokenInfo.access_token,
+    };
+
+    const payload = {
+      name: "Spotification Group ~ " + trimmed,
+      public: false,
+      description:
+        "This playlist was created on the Spotification " +
+        "site by combining other playlists. To update/sync, connect to " +
+        "playlistgroups.com. Don't add/remove tracks directly!",
+    };
+
+    axios
+      .post(`${SPOTIFY_BASE}/playlists`, payload, { headers })
+      .then((res) => {
+        if (!res.data?.id) {
+          console.log("No ID came back from Spotify", res.data);
+          return;
+        }
+        const apiPayload = {
+          spotifyId: res.data.id,
+          userId: res.owner.id,
+          spotifyPlaylistIds: [],
+        };
+        axios.post(`${API_BASE}/groups`);
+      })
+      .catch((err) => console.log(err));
   };
 
   const showAddButton = !group ? false : group !== "new" || newGroupName;

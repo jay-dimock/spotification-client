@@ -1,12 +1,19 @@
 import { useCallback } from "react";
 import axios from "axios";
+import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import { useRecoilState } from "recoil";
-import { userState, tokenInfoState, playlistsState } from "../recoil_state";
+import {
+  userState,
+  tokenInfoState,
+  playlistsState,
+  groupsState,
+} from "../recoil_state";
 
 export const useLoadInitialSpotifyData = () => {
   const [tokenInfo, setTokenInfo] = useRecoilState(tokenInfoState);
   const [, setUser] = useRecoilState(userState);
   const [, setPlaylists] = useRecoilState(playlistsState);
+  const [, setGroups] = useRecoilState(groupsState);
 
   return useCallback(
     async (newTokenInfo) => {
@@ -25,7 +32,7 @@ export const useLoadInitialSpotifyData = () => {
       };
 
       const loadUser = async () => {
-        const response = await axios.get("https://api.spotify.com/v1/me", {
+        const response = await axios.get(SPOTIFY_BASE, {
           headers,
         });
         const data = await response.data;
@@ -45,14 +52,17 @@ export const useLoadInitialSpotifyData = () => {
         return null;
       };
 
-      const loadPlaylists = async () => {
+      const loadPlaylists = async (groupData) => {
+        console.log(groupData);
         const playlists = [];
+        const groups = {};
 
         const getPlaylists = async (endpoint) => {
           await axios
             .get(endpoint, { headers })
             .then((response) => {
               // console.log(endpoint);
+              //
               populateList(response.data);
             })
             .catch((error) => {
@@ -64,26 +74,31 @@ export const useLoadInitialSpotifyData = () => {
           if (!data) {
             return;
           }
+
           // remove podcasts, etc:
           const chunk = data.items.filter((p) => p.type === "playlist");
           //console.log(chunk);
           const map = chunk.map((p) => {
-            if (p.name === "80s Mellow Mix") {
-              console.log(p);
-              console.log({
-                id: p.id,
+            const isGroup = groupData.groups && groupData.groups.has(p.id);
+            if (isGroup) {
+              groups[p.id] = {
+                spotifyId: p.id,
                 name: p.name,
-                owner_name: p.owner.display_name,
-                owner_id: p.owner.id,
-                total_tracks: p.tracks.total,
-              });
+                playlistIds: groupData.groups[p.id],
+              };
+              return;
             }
+
             return {
-              id: p.id,
+              spotifyId: p.id,
               name: p.name,
               owner_name: p.owner.display_name,
               owner_id: p.owner.id,
               total_tracks: p.tracks.total,
+              groupIds:
+                groupData.playlists && groupData.playlists.has(p.id)
+                  ? groupData.playlists[p.id]
+                  : [],
             };
           });
           playlists.push(...map);
@@ -95,12 +110,15 @@ export const useLoadInitialSpotifyData = () => {
               a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             );
             // console.log("populateList - playlists", playlists);
-            setPlaylists(playlists);
+            setPlaylists(
+              Object.fromEntries(playlists.map((p) => [p.spotifyId, p]))
+            );
+            setGroups(groups);
           }
         };
 
         const limit = 50; // max Spotify allows us to get at a time
-        const firstEndpoint = `https://api.spotify.com/v1/me/playlists?limit=${limit}`;
+        const firstEndpoint = `${SPOTIFY_BASE}/playlists?limit=${limit}`;
         await getPlaylists(firstEndpoint);
       };
 
@@ -111,8 +129,13 @@ export const useLoadInitialSpotifyData = () => {
           }
           setUser(user);
           setTokenInfo(newTokenInfo);
-          loadPlaylists()
-            .then(console.log("finished loading playlists"))
+          axios
+            .get(`${API_BASE}/groups/${user.id}`)
+            .then((groupData) => {
+              loadPlaylists(groupData)
+                .then(console.log("finished loading playlists"))
+                .catch(console.error);
+            })
             .catch(console.error);
         })
         .catch(console.error);

@@ -13,8 +13,12 @@ import { Box, Typography, Link, List, ListItem } from "@mui/material";
 export const Playlists = () => {
   const user = useRecoilValue(userState);
   const playlists = useRecoilValue(playlistsState);
+  //const sortedPlaylists = useRecoilValue(sortedPlaylistsState);
   const groups = useRecoilValue(groupsState);
   const [expandedPlaylistId, setExpandedPlaylistId] = useState(null);
+
+  //  console.log(playlists);
+  //console.log(Object.values(playlists));
 
   return (
     <div className="container-main">
@@ -35,10 +39,10 @@ export const Playlists = () => {
           borderRadius: "10px",
         }}
       >
-        {playlists.map((p) => (
+        {Object.values(playlists).map((p) => (
           <CustomAccordion
-            key={p.id}
-            id={p.id}
+            key={p.spotifyId}
+            id={p.spotifyId}
             expandedId={expandedPlaylistId}
             setExpandedId={setExpandedPlaylistId}
           >
@@ -48,7 +52,9 @@ export const Playlists = () => {
               )}
               <Typography
                 pl={1}
-                fontWeight={expandedPlaylistId === p.id ? "bold" : "normal"}
+                fontWeight={
+                  expandedPlaylistId === p.spotifyId ? "bold" : "normal"
+                }
               >
                 {p.name}
               </Typography>
