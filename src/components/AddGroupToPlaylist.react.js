@@ -67,12 +67,16 @@ export const AddGroupToPlaylist = (props) => {
           console.log("No ID came back from Spotify", res.data);
           return;
         }
+        console.log(res);
         const apiPayload = {
           spotifyId: res.data.id,
-          userId: res.owner.id,
+          userId: res.data.owner.id,
           spotifyPlaylistIds: [props.playlistId],
         };
-        axios.post(`${API_BASE}/groups`);
+        axios
+          .post(`${API_BASE}/groups`, apiPayload)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
@@ -103,13 +107,6 @@ export const AddGroupToPlaylist = (props) => {
               <Typography variant="subtitle2">{g.name}</Typography>
             </MenuItem>
           ))}
-
-          <MenuItem value={20}>
-            <Typography variant="subtitle2">Twenty</Typography>
-          </MenuItem>
-          <MenuItem value={30}>
-            <Typography variant="subtitle2">Thirty</Typography>
-          </MenuItem>
           <MenuItem value={"new"}>
             <Typography variant="subtitle2">[ new group ]</Typography>
           </MenuItem>
