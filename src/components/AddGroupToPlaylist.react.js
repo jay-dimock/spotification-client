@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { userState, playlistsState, groupsState } from "../recoil_state";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { playlistsState, groupsState } from "../recoil_state";
 import { tokenInfoState } from "../recoil_state";
+import { createGroupName } from "../util/groupNameConfig";
 import {
   Input,
   InputLabel,
@@ -17,23 +18,81 @@ import {
 } from "@mui/material";
 
 export const AddGroupToPlaylist = (props) => {
-  const [group, setGroup] = useState("");
+  const [selectedGroupId, setSelectedGroupId] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const [inputErrorMessage, setInputErrorMessage] = useState("");
   const tokenInfo = useRecoilValue(tokenInfoState);
-  const groups = useRecoilValue(groupsState);
+  const [groups, setGroups] = useRecoilState(groupsState);
+  const [playlists, setPlaylists] = useRecoilState(playlistsState);
 
   const handleGroupChange = (event) => {
+    setNewGroupName("");
     if (event.target.value === "new") {
-      setNewGroupName("");
       setInputErrorMessage("");
     }
-    setGroup(event.target.value);
+    setSelectedGroupId(event.target.value);
   };
 
   const handleNewGroupChange = (event) => {
     setInputErrorMessage("");
     setNewGroupName(event.target.value);
+  };
+
+  const updateRecoil = (groupId) => {
+    if (!groupId) {
+      throw new Error("Cannot update state: missing group ID");
+    }
+    const newGroupIds = [...playlists[props.playlistId].group_ids, groupId];
+    const updatedPlaylist = {
+      ...playlists[props.playlistId],
+      group_ids: [...new Set(newGroupIds)],
+    };
+    const localPlaylists = { ...playlists };
+    localPlaylists[props.playlistId] = updatedPlaylist;
+    setPlaylists(localPlaylists);
+
+    const localGroups = { ...groups };
+    if (!localGroups[groupId]) {
+      if (!newGroupName) {
+        throw new Error("Cannot update state: missing new group name.");
+      }
+      localGroups[groupId] = {
+        spotify_id: groupId,
+        name: newGroupName,
+        playlist_ids: [props.playlistId],
+      };
+    } else {
+      const newPlaylistIds = [
+        ...groups[groupId].playlist_ids,
+        props.playlistId,
+      ];
+      const updatedGroup = {
+        ...groups[groupId],
+        playlist_ids: [...new Set(newPlaylistIds)],
+      };
+      localGroups[groupId] = updatedGroup;
+    }
+    setGroups(localGroups);
+  };
+
+  const addGroup = () => {
+    if (selectedGroupId === "new") {
+      addNewGroup();
+      return;
+    }
+    // add playlist to existing group
+    const updatedPlayistIdsForGroup = [
+      ...groups[selectedGroupId].playlist_ids,
+      props.playlistId,
+    ];
+    axios
+      .put(`${API_BASE}/groups/${selectedGroupId}`, updatedPlayistIdsForGroup)
+      .then((res) => {
+        console.log(res);
+        updateRecoil(selectedGroupId);
+        setSelectedGroupId("");
+      })
+      .catch((err) => console.log(err));
   };
 
   const addNewGroup = () => {
@@ -45,14 +104,14 @@ export const AddGroupToPlaylist = (props) => {
     // todo: check no playlist exists with this name
     // todo: build a useCreateGroup hook and call it here
     // send in a callback to add this playlist to the group afterward
-    //const response = axios.post(`${API_BASE}/groups`)
+    // const response = axios.post(`${API_BASE}/groups`)
 
     const headers = {
       Authorization: "Bearer " + tokenInfo.access_token,
     };
 
     const payload = {
-      name: "Spotification ~ " + trimmed,
+      name: createGroupName(trimmed),
       public: false,
       description:
         "This playlist was created on the Spotification " +
@@ -75,13 +134,20 @@ export const AddGroupToPlaylist = (props) => {
         };
         axios
           .post(`${API_BASE}/groups`, apiPayload)
-          .then((res) => console.log(res))
+          .then((res) => {
+            console.log(res);
+            updateRecoil(apiPayload.spotifyId);
+            setSelectedGroupId("");
+            setNewGroupName("");
+          })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
 
-  const showAddButton = !group ? false : group !== "new" || newGroupName;
+  const showAddButton = !selectedGroupId
+    ? false
+    : selectedGroupId !== "new" || newGroupName;
 
   return (
     <div width="100%">
@@ -92,7 +158,7 @@ export const AddGroupToPlaylist = (props) => {
         <Select
           labelId="select-group"
           id="select-group"
-          value={group}
+          value={selectedGroupId}
           label="Add to group"
           onChange={handleGroupChange}
           sx={{ width: "100% - 5em" }}
@@ -103,7 +169,7 @@ export const AddGroupToPlaylist = (props) => {
             </Typography>
           </MenuItem>
           {Object.values(groups).map((g) => (
-            <MenuItem key={g.spotifyId} value={g.spotifyId}>
+            <MenuItem key={g.spotify_id} value={g.spotify_id}>
               <Typography variant="subtitle2">{g.name}</Typography>
             </MenuItem>
           ))}
@@ -112,7 +178,7 @@ export const AddGroupToPlaylist = (props) => {
           </MenuItem>
         </Select>
       </FormControl>
-      {group === "new" && (
+      {selectedGroupId === "new" && (
         <FormControl sx={{ mt: 1.5, p: 0, width: "100%" }} size="small">
           <TextField
             id="new-group-name"
@@ -132,7 +198,7 @@ export const AddGroupToPlaylist = (props) => {
           variant="contained"
           size="small"
           sx={{ mt: 1, display: "block" }}
-          onClick={addNewGroup}
+          onClick={addGroup}
         >
           <Typography variant="subtitle2">Add</Typography>
         </Button>

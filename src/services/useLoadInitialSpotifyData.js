@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import axios from "axios";
 import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import { useRecoilState } from "recoil";
+import { getFriendlyName } from "../util/groupNameConfig";
 import {
   userState,
   tokenInfoState,
@@ -84,11 +85,11 @@ export const useLoadInitialSpotifyData = () => {
             }
             if (isGroup) {
               groups[p.id] = {
-                spotifyId: p.id,
-                name: p.name,
-                playlistIds: groupData.groups[p.id],
+                spotify_id: p.id,
+                name: getFriendlyName(p.name),
+                playlist_ids: groupData.groups[p.id],
               };
-              return;
+              return null;
             }
 
             return {
@@ -108,7 +109,8 @@ export const useLoadInitialSpotifyData = () => {
           if (data.next) {
             await getPlaylists(data.next);
           } else {
-            playlists.sort((a, b) =>
+            const filteredPlaylists = playlists.filter((p) => p);
+            filteredPlaylists.sort((a, b) =>
               a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             );
             //console.log("populateList - playlists", playlists);
@@ -116,7 +118,7 @@ export const useLoadInitialSpotifyData = () => {
             setPlaylists(
               Object.fromEntries(
                 // remove undefined & convert to dictionary
-                playlists.filter((p) => p).map((p) => [p.spotify_id, p])
+                filteredPlaylists.map((p) => [p.spotify_id, p])
               )
             );
             setGroups(groups);
@@ -146,6 +148,6 @@ export const useLoadInitialSpotifyData = () => {
         })
         .catch(console.error);
     },
-    [setPlaylists, setTokenInfo, setUser, tokenInfo.access_token]
+    [setPlaylists, setGroups, setTokenInfo, setUser, tokenInfo.access_token]
   );
 };

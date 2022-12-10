@@ -17,8 +17,9 @@ export const Playlists = () => {
   const groups = useRecoilValue(groupsState);
   const [expandedPlaylistId, setExpandedPlaylistId] = useState(null);
 
-  //console.log(playlists);
+  //console.log(groups);
   //console.log(Object.values(playlists));
+  //console.log(playlists["2TNDuB7Uw0vwmPmkzJEFej"]);
 
   return (
     <div className="container-main">
@@ -72,7 +73,11 @@ export const Playlists = () => {
               <Typography variant="subtitle2" paddingBottom={1}>
                 Groups:
                 <List sx={{ paddingY: 0 }}>
-                  <ListItem sx={{ paddingY: 0 }}></ListItem>
+                  {p.group_ids.map((groupId) => (
+                    <ListItem key={groupId} sx={{ paddingY: 0 }}>
+                      {groups[groupId].name}
+                    </ListItem>
+                  ))}
                 </List>
               </Typography>
               <AddGroupToPlaylist playlistId={p.spotify_id} />
