@@ -23,10 +23,8 @@ export const useLoadInitialSpotifyData = () => {
         !newTokenInfo.access_token ||
         newTokenInfo.access_token === tokenInfo.access_token
       ) {
-        // console.log("nothing needs doing");
         return false;
       }
-      // console.log("getting data...");
       const headers = {
         Authorization: "Bearer " + newTokenInfo.access_token,
       };
@@ -36,7 +34,6 @@ export const useLoadInitialSpotifyData = () => {
           headers,
         });
         const data = await response.data;
-        // console.log(data);
         if (data?.id && data?.display_name) {
           let imageUrl = null;
           if (data.images && data.images.length > 0) {
@@ -61,8 +58,6 @@ export const useLoadInitialSpotifyData = () => {
           await axios
             .get(endpoint, { headers })
             .then((response) => {
-              // console.log(endpoint);
-              //
               populateList(response.data);
             })
             .catch((error) => {
@@ -77,12 +72,8 @@ export const useLoadInitialSpotifyData = () => {
 
           // remove podcasts, etc:
           const chunk = data.items.filter((p) => p.type === "playlist");
-          //console.log(chunk);
           const map = chunk.map((p) => {
             const isGroup = groupData.groups && groupData.groups[p.id] != null;
-            if (p.id === "1Osl5Wo118qBElD9r5U8Ui") {
-              console.log(p.name + " isGroup: ", isGroup);
-            }
             if (isGroup) {
               groups[p.id] = {
                 spotify_id: p.id,
@@ -113,15 +104,22 @@ export const useLoadInitialSpotifyData = () => {
             filteredPlaylists.sort((a, b) =>
               a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             );
-            //console.log("populateList - playlists", playlists);
 
             setPlaylists(
               Object.fromEntries(
-                // remove undefined & convert to dictionary
+                // convert to dictionary
                 filteredPlaylists.map((p) => [p.spotify_id, p])
               )
             );
-            setGroups(groups);
+            const sortedGroups = Object.values(groups).sort((a, b) =>
+              a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            );
+            setGroups(
+              Object.fromEntries(
+                // convert to dictionary
+                sortedGroups.map((g) => [g.spotify_id, g])
+              )
+            );
           }
         };
 
