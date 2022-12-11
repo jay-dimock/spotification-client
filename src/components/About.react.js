@@ -2,7 +2,7 @@ import { Login } from "./Login.react";
 import { AboutBasic } from "./AboutBasic.react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { viewState, tokenInfoState } from "../recoil_state";
-import { MANAGE } from "../constants/ViewConstants";
+import { MANAGE_PLAYLISTS } from "../constants/ViewConstants";
 import { Button, Typography } from "@mui/material";
 import React from "react";
 
@@ -19,7 +19,7 @@ export const About = () => {
         <Button
           variant="contained"
           sx={{ mt: 2 }}
-          onClick={() => setView(MANAGE)}
+          onClick={() => setView(MANAGE_PLAYLISTS)}
         >
           <Typography>Manage Playlists</Typography>
         </Button>

@@ -46,8 +46,6 @@ export const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 export const CustomAccordion = (props) => {
-  //const [expanded, setExpanded] = React.useState(false);
-
   const toggleExpansion = () => {
     const newValue = props.expandedId === props.id ? null : props.id;
     props.setExpandedId(newValue);

@@ -104,7 +104,6 @@ export const AddGroupToPlaylist = (props) => {
     // todo: check no playlist exists with this name
     // todo: build a useCreateGroup hook and call it here
     // send in a callback to add this playlist to the group afterward
-    // const response = axios.post(`${API_BASE}/groups`)
 
     const headers = {
       Authorization: "Bearer " + tokenInfo.access_token,

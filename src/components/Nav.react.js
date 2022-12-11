@@ -9,7 +9,7 @@ import {
   playlistsState,
   groupsState,
 } from "../recoil_state";
-import { FAQ, MANAGE } from "../constants/ViewConstants";
+import { FAQ, MANAGE_PLAYLISTS } from "../constants/ViewConstants";
 
 import {
   AppBar,
@@ -62,7 +62,10 @@ export const Nav = () => {
                     </Link>
                   )}
                   {view === FAQ && (
-                    <Link component="button" onClick={() => setView(MANAGE)}>
+                    <Link
+                      component="button"
+                      onClick={() => setView(MANAGE_PLAYLISTS)}
+                    >
                       Manage
                     </Link>
                   )}
