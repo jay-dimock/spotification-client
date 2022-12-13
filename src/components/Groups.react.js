@@ -14,7 +14,9 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "./Accordion.react";
+import { accordionPage } from "../styles";
 import {
+  Container,
   Typography,
   Link,
   List,
@@ -22,6 +24,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import { CustomBox } from "./CustomBox.react";
+import { RemoveButton } from "./RemoveButton.react";
 
 export const Groups = () => {
   const user = useRecoilValue(userState);
@@ -38,11 +41,14 @@ export const Groups = () => {
   };
 
   return (
-    <div className="container-main">
-      <Typography variant="h5" color="white" mb={1} mx={2}>
-        Group Playlists
-      </Typography>
-      <CustomBox>
+    <Container maxWidth="md" sx={accordionPage}>
+      <CustomBox
+        header={
+          <Typography variant="h6" color="white" mb={1} mx={2}>
+            Group Playlists
+          </Typography>
+        }
+      >
         {Object.values(groups).map((g) => (
           <CustomAccordion
             key={g.spotify_id}
@@ -64,31 +70,39 @@ export const Groups = () => {
               ></ListItemButton>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="subtitle2" paddingBottom={1}>
-                Individual Playlists:
-                <List sx={{ paddingY: 0 }}>
-                  {g.playlist_ids.map((playlistId) => (
-                    <ListItem
-                      key={playlistId}
-                      sx={{ paddingY: 0 }}
-                      onClick={handlePlaylistClicked}
-                    >
-                      <Link
-                        variant="subtitle2"
-                        component="button"
-                        value={playlistId}
-                        onClick={handlePlaylistClicked}
-                      >
-                        {playlists[playlistId].name}
-                      </Link>
-                    </ListItem>
-                  ))}
-                </List>
-              </Typography>
+              {g.playlist_ids.length === 0 ? (
+                <Typography variant="subtitle2">
+                  This group currently has no individual playlists.
+                </Typography>
+              ) : (
+                <Typography variant="subtitle2" paddingBottom={1}>
+                  Individual Playlists:
+                  <List sx={{ paddingY: 0 }}>
+                    {g.playlist_ids.map((playlistId) => (
+                      <ListItem key={playlistId} sx={{ paddingY: 0 }}>
+                        <RemoveButton
+                          tooltip="remove playlist"
+                          groupId={g.spotify_id}
+                          playlistId={playlistId}
+                        />
+                        <Link
+                          variant="subtitle2"
+                          component="button"
+                          value={playlistId}
+                          onClick={handlePlaylistClicked}
+                          sx={{ paddingLeft: 1 }}
+                        >
+                          {playlists[playlistId].name}
+                        </Link>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Typography>
+              )}
             </AccordionDetails>
           </CustomAccordion>
         ))}
       </CustomBox>
-    </div>
+    </Container>
   );
 };

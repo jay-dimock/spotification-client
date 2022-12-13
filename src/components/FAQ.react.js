@@ -1,31 +1,36 @@
 import React from "react";
 import { AboutBasic } from "./AboutBasic.react";
+import { accordionPage, accordionContent } from "../styles";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Box,
+  Container,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const FAQ = () => {
   return (
-    <div className="container-main">
+    <Container maxWidth="md" sx={accordionPage}>
       <Typography variant="h5" color="white" mb={1} mx={2}>
         Frequently Asked Questions
       </Typography>
-      {content.map((c, i) => (
-        <Accordion className="small-screen" key={i}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="privacy-policy-content"
-          >
-            <Typography fontWeight="bold">{c.q}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>{c.a}</AccordionDetails>
-        </Accordion>
-      ))}
-    </div>
+      <Box sx={accordionContent}>
+        {content.map((c, i) => (
+          <Accordion key={i}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="privacy-policy-content"
+            >
+              <Typography fontWeight="bold">{c.q}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>{c.a}</AccordionDetails>
+          </Accordion>
+        ))}
+      </Box>
+    </Container>
   );
 };
 

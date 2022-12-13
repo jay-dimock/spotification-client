@@ -5,6 +5,7 @@ import { Playlists } from "./Playlists.react";
 import { Groups } from "./Groups.react";
 import { About } from "./About.react";
 import { FAQ as FAQPage } from "./FAQ.react";
+import { Box } from "@mui/material";
 import {
   ABOUT,
   MANAGE_PLAYLISTS,
@@ -38,5 +39,5 @@ export const Home = () => {
     }
   };
 
-  return getView();
+  return <Box paddingTop={2}>{getView()}</Box>;
 };

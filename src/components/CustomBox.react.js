@@ -1,23 +1,21 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { accordionContent } from "../styles";
 
 export const CustomBox = (props) => {
   return (
     <Box
-      borderColor="#28a745"
       sx={{
         width: "100%",
-        maxWidth: 400,
-        maxHeight: 500,
-        backgroundColor: "white",
-        color: "black",
+        maxWidth: 600,
+        margin: "0 auto",
         overflow: "auto",
-        borderColor: "#28a745",
-        borderWidth: "1px",
-        borderRadius: "10px",
       }}
     >
-      {props.children}
+      {props.header}
+      <Box borderColor="#28a745" sx={accordionContent}>
+        {props.children}
+      </Box>
     </Box>
   );
 };

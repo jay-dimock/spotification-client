@@ -9,19 +9,23 @@ import {
   selectedGroupIdState,
 } from "../recoil_state";
 import { MANAGE_GROUPS } from "../constants/ViewConstants";
-import { People } from "@mui/icons-material";
+import { People, RemoveCircleOutline } from "@mui/icons-material";
 import {
   CustomAccordion,
   AccordionSummary,
   AccordionDetails,
 } from "./Accordion.react";
 import { AddGroupToPlaylist } from "./AddGroupToPlaylist.react";
+import { RemoveButton } from "./RemoveButton.react";
+import { accordionPage } from "../styles";
 import {
+  Container,
   Typography,
   Link,
   List,
   ListItem,
   ListItemButton,
+  Tooltip,
 } from "@mui/material";
 import { CustomBox } from "./CustomBox.react";
 
@@ -41,11 +45,14 @@ export const Playlists = () => {
   };
 
   return (
-    <div className="container-main">
-      <Typography variant="h5" color="white" mb={1} mx={2}>
-        Playlists
-      </Typography>
-      <CustomBox>
+    <Container maxWidth="md" sx={accordionPage}>
+      <CustomBox
+        header={
+          <Typography variant="h6" color="white" mb={1} mx={2}>
+            Individual Playlists
+          </Typography>
+        }
+      >
         {Object.values(playlists).map((p) => (
           <CustomAccordion
             key={p.spotify_id}
@@ -81,28 +88,42 @@ export const Playlists = () => {
                   </Link>
                 </Typography>
               )}
-              <Typography variant="subtitle2" paddingBottom={1}>
-                Groups:
-                <List sx={{ paddingY: 0 }}>
-                  {p.group_ids.map((groupId) => (
-                    <ListItem key={groupId} sx={{ paddingY: 0 }}>
-                      <Link
-                        variant="subtitle2"
-                        component="button"
-                        value={groupId}
-                        onClick={handleGroupClicked}
-                      >
-                        {groups[groupId].name}
-                      </Link>
-                    </ListItem>
-                  ))}
-                </List>
-              </Typography>
+              {p.group_ids.length === 0 ? (
+                <Typography variant="subtitle2" paddingBottom={1}>
+                  This playlist does not currently belong to any group
+                  playlists.
+                </Typography>
+              ) : (
+                <Typography variant="subtitle2" paddingBottom={1}>
+                  Groups:
+                  <List sx={{ paddingY: 0 }}>
+                    {p.group_ids.map((groupId) => (
+                      <ListItem key={groupId} sx={{ paddingY: 0 }}>
+                        <RemoveButton
+                          tooltip="remove group"
+                          groupId={groupId}
+                          playlistId={p.spotify_id}
+                        />
+                        <Link
+                          variant="subtitle2"
+                          component="button"
+                          value={groupId}
+                          onClick={handleGroupClicked}
+                          sx={{ paddingLeft: 1 }}
+                        >
+                          {groups[groupId].name}
+                        </Link>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Typography>
+              )}
+
               <AddGroupToPlaylist playlistId={p.spotify_id} />
             </AccordionDetails>
           </CustomAccordion>
         ))}
       </CustomBox>
-    </div>
+    </Container>
   );
 };

@@ -29,6 +29,7 @@ export const Nav = () => {
   const resetUser = useResetRecoilState(userState);
   const resetPlaylists = useResetRecoilState(playlistsState);
   const resetGroups = useResetRecoilState(groupsState);
+  const resetView = useResetRecoilState(viewState);
   const [view, setView] = useRecoilState(viewState);
 
   const logout = () => {
@@ -36,10 +37,11 @@ export const Nav = () => {
     resetUser();
     resetPlaylists();
     resetGroups();
+    resetView();
   };
 
   return (
-    <AppBar position="static" color="secondary">
+    <AppBar position="sticky" color="secondary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <IconButton>

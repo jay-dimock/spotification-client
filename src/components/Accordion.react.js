@@ -54,6 +54,7 @@ export const CustomAccordion = (props) => {
   return (
     <Accordion
       expanded={props.expandedId === props.id}
+      TransitionProps={{ unmountOnExit: true }}
       onChange={toggleExpansion}
     >
       {props.children}

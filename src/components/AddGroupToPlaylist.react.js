@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import axios from "axios";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { playlistsState, groupsState } from "../recoil_state";
-import { tokenInfoState } from "../recoil_state";
+import { playlistsState, groupsState, tokenInfoState } from "../recoil_state";
 import { createGroupName } from "../util/groupNameConfig";
 import {
-  Input,
   InputLabel,
-  OutlinedInput,
   MenuItem,
   FormControl,
   Select,
@@ -90,7 +87,7 @@ export const AddGroupToPlaylist = (props) => {
       .then((res) => {
         console.log(res);
         updateRecoil(selectedGroupId);
-        setSelectedGroupId("");
+        setSelectedGroupId(""); // why?
       })
       .catch((err) => console.log(err));
   };
