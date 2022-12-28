@@ -40,7 +40,7 @@ const playlistsState = atom({
 
 const selectedPlaylistIdState = atom({
   key: "selectedPlaylistIdState",
-  default: null,
+  default: "",
 });
 
 const groupsState = atom({
@@ -51,7 +51,7 @@ const groupsState = atom({
 
 const selectedGroupIdState = atom({
   key: "selectedGroupIdState",
-  default: null,
+  default: "",
 });
 
 export {

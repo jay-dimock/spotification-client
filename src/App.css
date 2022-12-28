@@ -12,17 +12,6 @@
   vertical-align: middle;
 }
 
-.container-inner {
-  background-color: white;
-  padding: 20px;
-}
-
-.container-main {
-  width: "100%";
-  padding: 0 20px;
-  margin: 0 auto;
-}
-
 ::-webkit-scrollbar {
   width: 20px;
 }
@@ -39,29 +28,4 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #1e7b34;
-}
-
-@media only screen and (max-width: 600px) {
-  .container-inner {
-    max-width: 600px;
-    border-radius: 0;
-  }
-  .container-main {
-    max-width: 600px;
-    border-radius: 0;
-    padding: 0;
-  }
-}
-
-@media only screen and (min-width: 970px) {
-  .container-inner {
-    max-width: 970px;
-    margin: 0 auto;
-    border-radius: 10px;
-  }
-
-  .container-main {
-    max-width: 970px;
-    border-radius: 10px;
-  }
 }

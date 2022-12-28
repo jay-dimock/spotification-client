@@ -9,7 +9,7 @@ import {
   selectedGroupIdState,
 } from "../recoil_state";
 import { MANAGE_GROUPS } from "../constants/ViewConstants";
-import { People, RemoveCircleOutline } from "@mui/icons-material";
+import { People } from "@mui/icons-material";
 import {
   CustomAccordion,
   AccordionSummary,
@@ -17,17 +17,16 @@ import {
 } from "./Accordion.react";
 import { AddGroupToPlaylist } from "./AddGroupToPlaylist.react";
 import { RemoveButton } from "./RemoveButton.react";
-import { accordionPage } from "../styles";
+import { accordionContent } from "../styles";
 import {
+  Box,
   Container,
   Typography,
   Link,
   List,
   ListItem,
   ListItemButton,
-  Tooltip,
 } from "@mui/material";
-import { CustomBox } from "./CustomBox.react";
 
 export const Playlists = () => {
   const user = useRecoilValue(userState);
@@ -45,14 +44,11 @@ export const Playlists = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={accordionPage}>
-      <CustomBox
-        header={
-          <Typography variant="h6" color="white" mb={1} mx={2}>
-            Individual Playlists
-          </Typography>
-        }
-      >
+    <Container maxWidth="sm" sx={{ padding: 0 }}>
+      <Typography variant="h6" color="white" mb={1} mx={2}>
+        Individual Playlists
+      </Typography>
+      <Box sx={accordionContent}>
         {Object.values(playlists).map((p) => (
           <CustomAccordion
             key={p.spotify_id}
@@ -123,7 +119,7 @@ export const Playlists = () => {
             </AccordionDetails>
           </CustomAccordion>
         ))}
-      </CustomBox>
+      </Box>
     </Container>
   );
 };

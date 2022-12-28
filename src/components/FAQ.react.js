@@ -1,6 +1,6 @@
 import React from "react";
 import { AboutBasic } from "./AboutBasic.react";
-import { accordionPage, accordionContent } from "../styles";
+import { accordionContent } from "../styles";
 import {
   Accordion,
   AccordionSummary,
@@ -13,7 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const FAQ = () => {
   return (
-    <Container maxWidth="md" sx={accordionPage}>
+    <Container maxWidth="md" sx={{ padding: 0 }}>
       <Typography variant="h5" color="white" mb={1} mx={2}>
         Frequently Asked Questions
       </Typography>

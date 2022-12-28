@@ -14,8 +14,10 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "./Accordion.react";
-import { accordionPage } from "../styles";
+import { accordionContent } from "../styles";
 import {
+  Box,
+  Button,
   Container,
   Typography,
   Link,
@@ -23,8 +25,9 @@ import {
   ListItem,
   ListItemButton,
 } from "@mui/material";
-import { CustomBox } from "./CustomBox.react";
 import { RemoveButton } from "./RemoveButton.react";
+import { AddPlaylistToGroup } from "./AddPlaylistToGroup.react";
+import { CreateGroup } from "./CreateGroup.react";
 
 export const Groups = () => {
   const user = useRecoilValue(userState);
@@ -40,15 +43,15 @@ export const Groups = () => {
     setView(MANAGE_PLAYLISTS);
   };
 
+  console.log(groups);
+
   return (
-    <Container maxWidth="md" sx={accordionPage}>
-      <CustomBox
-        header={
-          <Typography variant="h6" color="white" mb={1} mx={2}>
-            Group Playlists
-          </Typography>
-        }
-      >
+    <Container maxWidth="sm" sx={{ padding: 0 }}>
+      <Typography variant="h6" color="white" mb={1} mx={2}>
+        Group Playlists
+      </Typography>
+      <Box sx={accordionContent}>
+        <CreateGroup />
         {Object.values(groups).map((g) => (
           <CustomAccordion
             key={g.spotify_id}
@@ -70,6 +73,9 @@ export const Groups = () => {
               ></ListItemButton>
             </AccordionSummary>
             <AccordionDetails>
+              <Typography variant="subtitle2" paddingBottom={1}>
+                <b>Full name in Spotify: {g.full_name}</b>
+              </Typography>
               {g.playlist_ids.length === 0 ? (
                 <Typography variant="subtitle2">
                   This group currently has no individual playlists.
@@ -99,10 +105,11 @@ export const Groups = () => {
                   </List>
                 </Typography>
               )}
+              <AddPlaylistToGroup groupId={g.spotify_id} />
             </AccordionDetails>
           </CustomAccordion>
         ))}
-      </CustomBox>
+      </Box>
     </Container>
   );
 };

@@ -78,6 +78,7 @@ export const useLoadInitialSpotifyData = () => {
               groups[p.id] = {
                 spotify_id: p.id,
                 name: getFriendlyName(p.name),
+                full_name: p.name,
                 playlist_ids: groupData.groups[p.id],
               };
               return null;
