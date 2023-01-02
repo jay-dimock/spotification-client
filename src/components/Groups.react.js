@@ -17,7 +17,6 @@ import {
 import { accordionContent } from "../styles";
 import {
   Box,
-  Button,
   Container,
   Typography,
   Link,
@@ -43,8 +42,6 @@ export const Groups = () => {
     setSelectedPlaylistId(event.target.value);
     setView(MANAGE_PLAYLISTS);
   };
-
-  // console.log(groups);
 
   return (
     <Container maxWidth="sm" sx={{ padding: 0 }}>

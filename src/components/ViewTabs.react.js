@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { viewState } from "../recoil_state";
 import { MANAGE_PLAYLISTS, MANAGE_GROUPS } from "../constants/ViewConstants";

@@ -9,7 +9,8 @@ import {
   playlistsState,
   groupsState,
 } from "../recoil_state";
-import { FAQ, MANAGE_PLAYLISTS } from "../constants/ViewConstants";
+import { FAQ } from "../constants/ViewConstants";
+import { ListViewSetterButton } from "./ListViewSetterButton.react";
 
 import {
   AppBar,
@@ -64,12 +65,9 @@ export const Nav = () => {
                     </Link>
                   )}
                   {view === FAQ && (
-                    <Link
-                      component="button"
-                      onClick={() => setView(MANAGE_PLAYLISTS)}
-                    >
+                    <ListViewSetterButton component="link">
                       Manage
-                    </Link>
+                    </ListViewSetterButton>
                   )}
                   {" | "}
                   <Link component="button" onClick={logout}>

@@ -1,15 +1,15 @@
 import { Login } from "./Login.react";
 import { AboutBasic } from "./AboutBasic.react";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { viewState, tokenInfoState } from "../recoil_state";
-import { MANAGE_PLAYLISTS } from "../constants/ViewConstants";
+import { useRecoilValue } from "recoil";
+import { tokenInfoState } from "../recoil_state";
 import { aboutPage } from "../styles";
-import { Button, Container, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
+import { ListViewSetterButton } from "./ListViewSetterButton.react";
 import React from "react";
 
 export const About = () => {
   const tokenInfo = useRecoilValue(tokenInfoState);
-  const [, setView] = useRecoilState(viewState);
+
   return (
     <Container maxWidth="md" sx={aboutPage}>
       <h2>Welcome to Spotification!</h2>
@@ -17,13 +17,9 @@ export const About = () => {
       {!tokenInfo.access_token ? (
         <Login />
       ) : (
-        <Button
-          variant="contained"
-          sx={{ mt: 2 }}
-          onClick={() => setView(MANAGE_PLAYLISTS)}
-        >
+        <ListViewSetterButton variant="contained" sx={{ mt: 2 }}>
           <Typography>Manage Playlists</Typography>
-        </Button>
+        </ListViewSetterButton>
       )}
     </Container>
   );
