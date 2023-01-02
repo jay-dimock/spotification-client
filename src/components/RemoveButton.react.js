@@ -12,7 +12,7 @@ export const RemoveButton = (props) => {
   const [groups, setGroups] = useRecoilState(groupsState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
 
-  const Remove = () => {
+  const remove = () => {
     if (!groupId || !playlistId) {
       console.error("groupId or playlistId is missing");
       return;
@@ -55,7 +55,7 @@ export const RemoveButton = (props) => {
 
   return (
     <Tooltip title={tooltip} placement="left">
-      <IconButton size={"small"} onClick={Remove}>
+      <IconButton size={"small"} onClick={remove}>
         <RemoveCircleOutline
           sx={{
             color: "black",

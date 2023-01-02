@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
-import axios from "axios";
-import { useRecoilValue, useRecoilState } from "recoil";
-import { playlistsState, groupsState, tokenInfoState } from "../recoil_state";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistsState, selectedPlaylistIdState } from "../recoil_state";
+import { AddButton } from "./AddButton.react";
 
 import {
   InputLabel,
@@ -10,21 +9,17 @@ import {
   FormControl,
   Select,
   Typography,
-  Button,
-  TextField,
 } from "@mui/material";
 
 export const AddPlaylistToGroup = (props) => {
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
-  const tokenInfo = useRecoilValue(tokenInfoState);
-  const [groups, setGroups] = useRecoilState(groupsState);
-  const [playlists, setPlaylists] = useRecoilState(playlistsState);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useRecoilState(
+    selectedPlaylistIdState
+  );
+  const playlists = useRecoilValue(playlistsState);
 
   const handlePlaylistChange = (event) => {
     setSelectedPlaylistId(event.target.value);
   };
-
-  const addPlaylist = (event) => {};
 
   return (
     <div width="100%">
@@ -54,14 +49,11 @@ export const AddPlaylistToGroup = (props) => {
         </Select>
       </FormControl>
       {!!selectedPlaylistId && (
-        <Button
-          variant="contained"
-          size="small"
-          sx={{ mt: 1, p: 0 }}
-          onClick={addPlaylist}
-        >
-          <Typography variant="subtitle2">Add</Typography>
-        </Button>
+        <AddButton
+          groupId={props.groupId}
+          playlistId={selectedPlaylistId}
+          clearSelection={() => setSelectedPlaylistId("")}
+        />
       )}
     </div>
   );
