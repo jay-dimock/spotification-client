@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   playlistsState,
   groupsState,
@@ -19,19 +19,12 @@ import {
 } from "@mui/material";
 
 export const AddGroupToPlaylist = (props) => {
-  // const [selectedGroupId, setSelectedGroupId] = useState("");
   const [selectedGroupId, setSelectedGroupId] =
     useRecoilState(selectedGroupIdState);
-  // const [newGroupName, setNewGroupName] = useState("");
-  // const [inputErrorMessage, setInputErrorMessage] = useState("");
-  // const tokenInfo = useRecoilValue(tokenInfoState);
   const [groups, setGroups] = useRecoilState(groupsState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
 
   const handleGroupChange = (event) => {
-    // if (event.target.value === "new") {
-    //   setInputErrorMessage("");
-    // }
     setSelectedGroupId(event.target.value);
   };
 

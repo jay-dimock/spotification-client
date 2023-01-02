@@ -28,6 +28,7 @@ import {
 import { RemoveButton } from "./RemoveButton.react";
 import { AddPlaylistToGroup } from "./AddPlaylistToGroup.react";
 import { CreateGroup } from "./CreateGroup.react";
+import { ViewTabs } from "./ViewTabs.react";
 
 export const Groups = () => {
   const user = useRecoilValue(userState);
@@ -43,13 +44,11 @@ export const Groups = () => {
     setView(MANAGE_PLAYLISTS);
   };
 
-  console.log(groups);
+  // console.log(groups);
 
   return (
     <Container maxWidth="sm" sx={{ padding: 0 }}>
-      <Typography variant="h6" color="white" mb={1} mx={2}>
-        Group Playlists
-      </Typography>
+      <ViewTabs />
       <Box sx={accordionContent}>
         <CreateGroup />
         {Object.values(groups).map((g) => (

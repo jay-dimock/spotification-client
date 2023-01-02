@@ -15,9 +15,10 @@ export const accordionContent = {
   backgroundColor: "white",
   color: "black",
   overflow: "auto",
-  // borderColor: "#28a745",
-  // borderWidth: "1px",
   borderRadius: 2,
+  border: 2,
+  borderColor: "#28a745",
+
   [theme.breakpoints.down("sm")]: {
     borderRadius: 0,
   },
