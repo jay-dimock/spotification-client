@@ -8,6 +8,7 @@ import {
   tokenInfoState,
   playlistsState,
   groupsState,
+  syncingState,
 } from "../recoil_state";
 import { FAQ } from "../constants/ViewConstants";
 import { ListViewSetterButton } from "./ListViewSetterButton.react";
@@ -26,6 +27,7 @@ import {
 export const Nav = () => {
   const user = useRecoilValue(userState);
   const tokenInfo = useRecoilValue(tokenInfoState);
+  const syncing = useRecoilValue(syncingState);
   const resetTokenInfo = useResetRecoilState(tokenInfoState);
   const resetUser = useResetRecoilState(userState);
   const resetPlaylists = useResetRecoilState(playlistsState);
@@ -50,7 +52,9 @@ export const Nav = () => {
           </IconButton>
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Spotification
+            {syncing && <Typography variant="subtitle2">syncing...</Typography>}
           </Typography>
+
           {!user.id || !tokenInfo.access_token ? (
             <Link href={`${API_BASE}/auth/login`}>Connect to Spotify</Link>
           ) : (

@@ -3,6 +3,7 @@ import axios from "axios";
 import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
 import { useRecoilState } from "recoil";
 import { getFriendlyName } from "../util/groupNameConfig";
+import { useSyncSpotify } from "./useSyncSpotify";
 import {
   userState,
   tokenInfoState,
@@ -15,6 +16,7 @@ export const useLoadInitialSpotifyData = () => {
   const [, setUser] = useRecoilState(userState);
   const [, setPlaylists] = useRecoilState(playlistsState);
   const [, setGroups] = useRecoilState(groupsState);
+  const sync = useSyncSpotify();
 
   return useCallback(
     async (newTokenInfo) => {
@@ -139,9 +141,7 @@ export const useLoadInitialSpotifyData = () => {
           axios
             .get(`${API_BASE}/groups/${user.id}`)
             .then((groupData) => {
-              loadPlaylists(groupData.data)
-                .then(console.log("finished loading playlists"))
-                .catch(console.error);
+              loadPlaylists(groupData.data).then(sync()).catch(console.error);
             })
             .catch(console.error);
         })

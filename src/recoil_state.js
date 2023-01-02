@@ -54,6 +54,12 @@ const selectedGroupIdState = atom({
   default: "",
 });
 
+const syncingState = atom({
+  key: "syncingState",
+  default: false,
+  effects: [persistAtom], // todo: evaluate if this could cause problems
+});
+
 export {
   viewState,
   tokenInfoState,
@@ -62,4 +68,5 @@ export {
   selectedPlaylistIdState,
   groupsState,
   selectedGroupIdState,
+  syncingState,
 };
