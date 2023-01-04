@@ -1,5 +1,5 @@
 import React from "react";
-import { API_BASE } from "../constants/EnvConstants";
+import { APP_API_BASE } from "../constants/EnvConstants";
 import logo from "../images/logo.png";
 import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
 import {
@@ -56,7 +56,7 @@ export const Nav = () => {
           </Typography>
 
           {!user.id || !tokenInfo.access_token ? (
-            <Link href={`${API_BASE}/auth/login`}>Connect to Spotify</Link>
+            <Link href={`${APP_API_BASE}/auth/login`}>Connect to Spotify</Link>
           ) : (
             <Stack direction="row" spacing={2}>
               <Avatar alt={user.display_name} src={user.image_url} />

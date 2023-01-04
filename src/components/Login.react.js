@@ -1,5 +1,5 @@
 import React from "react";
-import { API_BASE } from "../constants/EnvConstants";
+import { APP_API_BASE } from "../constants/EnvConstants";
 import {
   Accordion,
   AccordionSummary,
@@ -10,7 +10,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export const Login = () => {
-  const endpoint = `${API_BASE}/auth/login`;
+  const endpoint = `${APP_API_BASE}/auth/login`;
   return (
     <div>
       <h2>Connect to Spotify</h2>

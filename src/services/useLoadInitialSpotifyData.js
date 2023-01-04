@@ -1,6 +1,11 @@
 import { useCallback } from "react";
 import axios from "axios";
-import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
+import {
+  APP_API_BASE,
+  SPOTIFY_ENDPOINT_USER,
+  SPOTIFY_ENDPOINT_PLAYLISTS,
+  spotifyHeaders,
+} from "../constants/EnvConstants";
 import { useRecoilState } from "recoil";
 import { getFriendlyName } from "../util/groupNameConfig";
 import { useSyncSpotify } from "./useSyncSpotify";
@@ -27,12 +32,9 @@ export const useLoadInitialSpotifyData = () => {
       ) {
         return false;
       }
-      const headers = {
-        Authorization: "Bearer " + newTokenInfo.access_token,
-      };
-
+      const headers = spotifyHeaders(newTokenInfo.access_token);
       const loadUser = async () => {
-        const response = await axios.get(SPOTIFY_BASE, {
+        const response = await axios.get(SPOTIFY_ENDPOINT_USER, {
           headers,
         });
         const data = await response.data;
@@ -127,7 +129,7 @@ export const useLoadInitialSpotifyData = () => {
         };
 
         const limit = 50; // max Spotify allows us to get at a time
-        const firstEndpoint = `${SPOTIFY_BASE}/playlists?limit=${limit}`;
+        const firstEndpoint = `${SPOTIFY_ENDPOINT_PLAYLISTS}?limit=${limit}`;
         await getPlaylists(firstEndpoint);
       };
 
@@ -139,14 +141,23 @@ export const useLoadInitialSpotifyData = () => {
           setUser(user);
           setTokenInfo(newTokenInfo);
           axios
-            .get(`${API_BASE}/groups/${user.id}`)
+            .get(`${APP_API_BASE}/groups/${user.id}`)
             .then((groupData) => {
-              loadPlaylists(groupData.data).then(sync()).catch(console.error);
+              loadPlaylists(groupData.data)
+                .then(sync(newTokenInfo))
+                .catch(console.error);
             })
             .catch(console.error);
         })
         .catch(console.error);
     },
-    [setPlaylists, setGroups, setTokenInfo, setUser, tokenInfo.access_token]
+    [
+      setPlaylists,
+      setGroups,
+      setTokenInfo,
+      setUser,
+      tokenInfo.access_token,
+      sync,
+    ]
   );
 };

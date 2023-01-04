@@ -1,7 +1,7 @@
 import React from "react";
 import { RemoveCircleOutline } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { API_BASE } from "../constants/EnvConstants";
+import { APP_API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { playlistsState, groupsState, tokenInfoState } from "../recoil_state";
@@ -21,7 +21,7 @@ export const RemoveButton = (props) => {
       (p) => p !== playlistId
     );
     axios
-      .put(`${API_BASE}/groups/${groupId}`, [...updatedPlaylistIdsForGroup])
+      .put(`${APP_API_BASE}/groups/${groupId}`, [...updatedPlaylistIdsForGroup])
       .then((res) => {
         console.log(res);
         updateRecoil();

@@ -1,15 +1,17 @@
 import React from "react";
-import { API_BASE } from "../constants/EnvConstants";
+import { APP_API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { playlistsState, groupsState, tokenInfoState } from "../recoil_state";
 import { Typography, Button } from "@mui/material";
+import { useSyncSpotify } from "../services/useSyncSpotify";
 
 export const AddButton = (props) => {
   const { groupId, playlistId, clearSelection } = props;
-  const tokenInfo = useRecoilValue(tokenInfoState);
+  //const tokenInfo = useRecoilValue(tokenInfoState);
   const [groups, setGroups] = useRecoilState(groupsState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
+  const sync = useSyncSpotify();
 
   const updateRecoil = () => {
     const newGroupIds = [...playlists[playlistId].group_ids, groupId];
@@ -47,11 +49,12 @@ export const AddButton = (props) => {
       playlistId,
     ];
     axios
-      .put(`${API_BASE}/groups/${groupId}`, updatedPlayistIdsForGroup)
+      .put(`${APP_API_BASE}/groups/${groupId}`, updatedPlayistIdsForGroup)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         updateRecoil();
         clearSelection(); // clears selection from dropdown
+        sync(groupId);
       })
       .catch((err) => console.log(err));
   };

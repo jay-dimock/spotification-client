@@ -1,5 +1,9 @@
 import React from "react";
-import { API_BASE, SPOTIFY_BASE } from "../constants/EnvConstants";
+import {
+  APP_API_BASE,
+  SPOTIFY_ENDPOINT_PLAYLISTS,
+  spotifyHeaders,
+} from "../constants/EnvConstants";
 import axios from "axios";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
@@ -56,9 +60,7 @@ export const CreateGroupButton = (props) => {
       setInputErrorMessage("New group name cannot be blank");
       return;
     }
-    const headers = {
-      Authorization: "Bearer " + tokenInfo.access_token,
-    };
+    const headers = spotifyHeaders(tokenInfo.access_token);
     const payload = {
       name: createGroupName(trimmed),
       public: false,
@@ -68,7 +70,7 @@ export const CreateGroupButton = (props) => {
         "playlistgroups.com. Don't add/remove tracks directly!",
     };
     axios
-      .post(`${SPOTIFY_BASE}/playlists`, payload, { headers })
+      .post(SPOTIFY_ENDPOINT_PLAYLISTS, payload, { headers })
       .then((res) => {
         if (!res.data?.id) {
           console.log("No ID came back from Spotify", res.data);
@@ -81,7 +83,7 @@ export const CreateGroupButton = (props) => {
           spotifyPlaylistIds: playlistIds,
         };
         axios
-          .post(`${API_BASE}/groups`, apiPayload)
+          .post(`${APP_API_BASE}/groups`, apiPayload)
           .then((res) => {
             console.log(res);
             updateRecoil(apiPayload.spotifyId);
