@@ -10,7 +10,6 @@ export const useGetTracks = () => {
   return async (tokenInfo, playlistId) => {
     const headers = spotifyHeaders(tokenInfo.access_token);
     const trackIds = [];
-
     let endpoint = spotifyEndpointTracks(playlistId);
 
     while (endpoint) {
