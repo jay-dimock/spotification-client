@@ -33,6 +33,7 @@ export const Nav = () => {
   const resetPlaylists = useResetRecoilState(playlistsState);
   const resetGroups = useResetRecoilState(groupsState);
   const resetView = useResetRecoilState(viewState);
+  const resetSyncing = useResetRecoilState(syncingState);
   const [view, setView] = useRecoilState(viewState);
 
   const logout = () => {
@@ -41,6 +42,7 @@ export const Nav = () => {
     resetPlaylists();
     resetGroups();
     resetView();
+    resetSyncing();
   };
 
   return (

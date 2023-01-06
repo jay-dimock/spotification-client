@@ -13,7 +13,6 @@ export function createTokenInfoObject(data, currentToken, currentRefreshToken) {
   console.log("creating tokenInfo object");
 
   const expireDate = moment(new Date())
-    //.add(30, "seconds") // set to a few seconds - FOR TESTING ONLY
     .add(data.expires_in, "seconds")
     .toDate();
 

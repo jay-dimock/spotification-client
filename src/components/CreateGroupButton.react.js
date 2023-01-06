@@ -13,21 +13,37 @@ import {
   selectedGroupIdState,
 } from "../recoil_state";
 import { createGroupName } from "../util/groupNameConfig";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { useGetRefreshedToken } from "../services/useGetRefreshedToken";
+import { useSyncSpotify } from "../services/useSyncSpotify";
 
 export const CreateGroupButton = (props) => {
   const { newGroupName, setNewGroupName, setInputErrorMessage, playlistId } =
     props;
   const tokenInfo = useRecoilValue(tokenInfoState);
+  const getRefreshedToken = useGetRefreshedToken();
+  const sync = useSyncSpotify();
   const [groups, setGroups] = useRecoilState(groupsState);
   const [, setSelectedGroupId] = useRecoilState(selectedGroupIdState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
   const playlistIds = playlistId ? [playlistId] : [];
 
-  const updateRecoil = (groupId) => {
+  const getNewGroupObject = (groupId) => {
     if (!groupId) {
-      throw new Error("Cannot update state: missing group ID");
+      throw new Error("Missing group ID");
     }
+    if (!newGroupName) {
+      throw new Error("Missing new group name.");
+    }
+    return {
+      spotify_id: groupId,
+      name: newGroupName,
+      full_name: createGroupName(newGroupName),
+      playlist_ids: playlistIds,
+    };
+  };
+
+  const updateRecoil = (groupId) => {
     if (playlistId) {
       const newGroupIds = [...playlists[playlistId].group_ids, groupId];
       const updatedPlaylist = {
@@ -38,29 +54,19 @@ export const CreateGroupButton = (props) => {
       localPlaylists[playlistId] = updatedPlaylist;
       setPlaylists(localPlaylists);
     }
-
     const localGroups = { ...groups };
-
-    if (!newGroupName) {
-      throw new Error("Cannot update state: missing new group name.");
-    }
-    localGroups[groupId] = {
-      spotify_id: groupId,
-      name: newGroupName,
-      full_name: createGroupName(newGroupName),
-      playlist_ids: playlistIds,
-    };
-
+    localGroups[groupId] = getNewGroupObject(groupId);
     setGroups(localGroups);
   };
 
-  const addGroup = () => {
+  const addGroup = async () => {
     const trimmed = newGroupName.trim();
     if (!trimmed) {
       setInputErrorMessage("New group name cannot be blank");
       return;
     }
-    const headers = spotifyHeaders(tokenInfo.access_token);
+    const refreshedTokenInfo = await getRefreshedToken(tokenInfo);
+    const headers = spotifyHeaders(refreshedTokenInfo.access_token);
     const payload = {
       name: createGroupName(trimmed),
       public: false,
@@ -84,8 +90,11 @@ export const CreateGroupButton = (props) => {
         };
         axios
           .post(`${APP_API_BASE}/groups`, apiPayload)
-          .then((res) => {
-            console.log(res);
+          .then(() => {
+            if (playlistId) {
+              const groupObject = getNewGroupObject(apiPayload.spotifyId);
+              sync([groupObject], refreshedTokenInfo);
+            }
             updateRecoil(apiPayload.spotifyId);
             setSelectedGroupId("");
             setNewGroupName("");

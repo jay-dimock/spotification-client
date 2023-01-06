@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { tokenInfoState, syncingState } from "../recoil_state";
 import { useGetRefreshedToken } from "./useGetRefreshedToken";
@@ -16,11 +15,9 @@ export const useSyncSpotify = () => {
 
   return async (groups, tokenInfo) => {
     setSyncing(true);
-    console.log("groups to sync", groups);
     let currentTokenInfo = tokenInfo ?? recoilTokenInfo;
 
     const getCombinedTrackUris = async (group) => {
-      console.log("group", group);
       currentTokenInfo = await getRefreshedToken(currentTokenInfo);
       const trackUris = [];
       for (const pid of group.playlist_ids) {
@@ -51,20 +48,9 @@ export const useSyncSpotify = () => {
       console.log("tracksToRemove.length", tracksToRemove.length);
 
       await addTracks(currentTokenInfo, group.spotify_id, tracksToAdd);
-
       await removeTracks(currentTokenInfo, group.spotify_id, tracksToRemove);
     }
 
     setSyncing(false);
   };
-  //   },
-  //   [
-  //     setSyncing,
-  //     getTracks,
-  //     getRefreshedToken,
-  //     recoilTokenInfo,
-  //     addTracks,
-  //     removeTracks,
-  //   ]
-  // );
 };

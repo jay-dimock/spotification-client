@@ -16,8 +16,6 @@ export const useRemoveTracks = () => {
       return { uri: uri };
     });
 
-    console.log(trackObjects);
-
     // break track list into chunks of 100, which is
     // the max Spotify will accept at one time.
     const chunks = [];
@@ -27,17 +25,10 @@ export const useRemoveTracks = () => {
     }
 
     for (const chunk of chunks) {
-      const response = await axios
+      await axios
         .delete(endpoint, { data: { tracks: chunk }, headers: headers })
         .then((res) => res)
         .catch(console.error);
-      console.log(response);
     }
-    console.log(
-      "check that " +
-        trackObjects.length +
-        " tracks were removed from group: " +
-        playlistId
-    );
   };
 };

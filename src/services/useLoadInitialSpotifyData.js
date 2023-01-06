@@ -138,7 +138,6 @@ export const useLoadInitialSpotifyData = () => {
         groups.map((g) => [g.spotify_id, g])
       )
     );
-
-    sync(groups, newTokenInfo);
+    await sync(groups, newTokenInfo);
   };
 };

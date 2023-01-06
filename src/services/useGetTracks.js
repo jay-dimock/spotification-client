@@ -6,7 +6,6 @@ import {
 
 export const useGetTracks = () => {
   return async (tokenInfo, playlistId) => {
-    console.log("getTracks-> playlistId", playlistId);
     const headers = spotifyHeaders(tokenInfo.access_token);
     const trackUris = [];
     let endpoint = spotifyEndpointTracks(playlistId);
