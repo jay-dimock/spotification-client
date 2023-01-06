@@ -1,51 +1,70 @@
 import { useCallback } from "react";
-import axios from "axios";
-import { SPOTIFY_BASE } from "../constants/EnvConstants";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  userState,
-  playlistsState,
-  tokenInfoState,
-  groupsState,
-  syncingState,
-} from "../recoil_state";
+import { tokenInfoState, syncingState } from "../recoil_state";
 import { useGetRefreshedToken } from "./useGetRefreshedToken";
 import { useGetTracks } from "./useGetTracks";
+import { useAddTracks } from "./useAddTracks";
+import { useRemoveTracks } from "./useRemoveTracks";
 
 export const useSyncSpotify = () => {
   const [, setSyncing] = useRecoilState(syncingState);
-  const [groups, setGroups] = useRecoilState(groupsState);
+  const recoilTokenInfo = useRecoilValue(tokenInfoState);
   const getRefreshedToken = useGetRefreshedToken();
   const getTracks = useGetTracks();
-  const tokenInfo = useRecoilValue(tokenInfoState);
+  const addTracks = useAddTracks();
+  const removeTracks = useRemoveTracks();
 
-  return useCallback(
-    async (groupId) => {
-      setSyncing(true);
-      const groupIds = groupId ? [groupId] : Object.keys(groups);
-      let currentTokenInfo = tokenInfo;
+  return async (groups, tokenInfo) => {
+    setSyncing(true);
+    console.log("groups to sync", groups);
+    let currentTokenInfo = tokenInfo ?? recoilTokenInfo;
 
-      const getCombinedTrackIds = async (gid) => {
-        currentTokenInfo = await getRefreshedToken(currentTokenInfo);
-        const playlistIds = groups[gid].playlist_ids;
-        const trackIds = [];
+    const getCombinedTrackUris = async (group) => {
+      console.log("group", group);
+      currentTokenInfo = await getRefreshedToken(currentTokenInfo);
+      const trackUris = [];
+      for (const pid of group.playlist_ids) {
+        const ids = await getTracks(currentTokenInfo, pid);
+        trackUris.push(...ids);
+      }
+      return trackUris;
+    };
 
-        for (const pid of playlistIds) {
-          console.log("pid", pid);
-          const ids = await getTracks(currentTokenInfo, pid);
-          trackIds.push(...ids);
-        }
-        const uniqueTrackIds = [...new Set(trackIds)];
-        return uniqueTrackIds;
-      };
+    for (const group of groups) {
+      console.log("SYNCING GROUP: " + group.name);
+      const combinedTracks = await getCombinedTrackUris(group);
+      const uniqueCombinedTracks = new Set(combinedTracks);
+      console.log("combinedTracks length", [...uniqueCombinedTracks].length);
 
-      groupIds.forEach(async (gid) => {
-        const combinedTracks = await getCombinedTrackIds(gid);
-        console.log("combinedTracks length", combinedTracks.length);
-      });
+      const groupTracks = await getTracks(currentTokenInfo, group.spotify_id);
+      const uniqueGroupTracks = new Set(groupTracks);
+      console.log("groupTracks length", [...uniqueGroupTracks].length);
 
-      setSyncing(false);
-    },
-    [groups, setSyncing, getTracks, getRefreshedToken, tokenInfo]
-  );
+      const tracksToAdd = [...uniqueCombinedTracks].filter(
+        (t) => !uniqueGroupTracks.has(t)
+      );
+      console.log("tracksToAdd.length", tracksToAdd.length);
+
+      const tracksToRemove = [...uniqueGroupTracks].filter(
+        (t) => !uniqueCombinedTracks.has(t)
+      );
+      console.log("tracksToRemove.length", tracksToRemove.length);
+
+      await addTracks(currentTokenInfo, group.spotify_id, tracksToAdd);
+
+      await removeTracks(currentTokenInfo, group.spotify_id, tracksToRemove);
+    }
+
+    setSyncing(false);
+  };
+  //   },
+  //   [
+  //     setSyncing,
+  //     getTracks,
+  //     getRefreshedToken,
+  //     recoilTokenInfo,
+  //     addTracks,
+  //     removeTracks,
+  //   ]
+  // );
 };

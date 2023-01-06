@@ -2,9 +2,6 @@ import moment from "moment";
 
 export function createTokenInfoObject(data, currentToken, currentRefreshToken) {
   if (!data || !data.access_token || data.access_token === currentToken) {
-    console.log("data", data);
-    console.log("currentToken", currentToken);
-    console.log("token is missing or unchanged", data);
     return null;
   }
   if (!data.expires_in) {
@@ -16,8 +13,8 @@ export function createTokenInfoObject(data, currentToken, currentRefreshToken) {
   console.log("creating tokenInfo object");
 
   const expireDate = moment(new Date())
-    .add(30, "seconds") // set to a few seconds - FOR TESTING ONLY
-    //.add(data.expires_in, "seconds")
+    //.add(30, "seconds") // set to a few seconds - FOR TESTING ONLY
+    .add(data.expires_in, "seconds")
     .toDate();
 
   return {

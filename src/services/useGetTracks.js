@@ -1,6 +1,4 @@
-import { useCallback } from "react";
 import axios from "axios";
-//import { useRefreshedToken } from "./useRefreshedToken";
 import {
   spotifyEndpointTracks,
   spotifyHeaders,
@@ -8,8 +6,9 @@ import {
 
 export const useGetTracks = () => {
   return async (tokenInfo, playlistId) => {
+    console.log("getTracks-> playlistId", playlistId);
     const headers = spotifyHeaders(tokenInfo.access_token);
-    const trackIds = [];
+    const trackUris = [];
     let endpoint = spotifyEndpointTracks(playlistId);
 
     while (endpoint) {
@@ -24,10 +23,10 @@ export const useGetTracks = () => {
         const itemIsTrack = !!item.track.track;
         return itemIsTrack && !item.track.is_local;
       });
-      const map = chunk.map((item) => item.track.id);
-      trackIds.push(...map);
+      const map = chunk.map((item) => item.track.uri);
+      trackUris.push(...map);
       endpoint = data.next;
     }
-    return trackIds;
+    return trackUris;
   };
 };
