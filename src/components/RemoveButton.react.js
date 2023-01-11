@@ -3,8 +3,8 @@ import { RemoveCircleOutline } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { APP_API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
-import { useRecoilState } from "recoil";
-import { playlistsState, groupsState } from "../recoil_state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistsState, groupsState, syncingState } from "../recoil_state";
 import { useSyncSpotify } from "../services/useSyncSpotify";
 
 export const RemoveButton = (props) => {
@@ -12,6 +12,7 @@ export const RemoveButton = (props) => {
   const [groups, setGroups] = useRecoilState(groupsState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
   const sync = useSyncSpotify();
+  const syncing = useRecoilValue(syncingState);
 
   const getUpdatedGroup = () => {
     const updatedPlaylistIds = [...groups[groupId].playlist_ids].filter(
@@ -56,6 +57,10 @@ export const RemoveButton = (props) => {
       })
       .catch((err) => console.log(err));
   };
+
+  if (syncing) {
+    return null;
+  }
 
   return (
     <Tooltip title={tooltip} placement="left">

@@ -1,8 +1,9 @@
 const prefix = "Spotification";
 const delimiter = "~";
+export const prefixAndDelimiter = `${prefix} ${delimiter}`;
 
 export const createGroupName = (name) => {
-  return `${prefix} ${delimiter} ${name}`;
+  return `${prefixAndDelimiter} ${name}`;
 };
 
 export const getFriendlyName = (name) => {

@@ -15,6 +15,11 @@ export const CreateGroupInput = (props) => {
 
   return (
     <div width="100%">
+      {props.header && (
+        <Typography ml={1} p={0} mb={0} fontWeight="bold">
+          Create New Group
+        </Typography>
+      )}
       <FormControl sx={props.sx} size="small">
         <TextField
           id="new-group-name"

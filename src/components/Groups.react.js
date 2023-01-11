@@ -1,7 +1,6 @@
 import React from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
-  userState,
   playlistsState,
   groupsState,
   viewState,

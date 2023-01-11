@@ -10,19 +10,17 @@ export const AboutBasic = () => {
       </Typography>
       <h4>Group your playlists</h4>
       <Typography>
-        Group related playlists together here on Spotification. You will then be
-        able to play all tracks together for the group. For example, you might
-        create a group called "Dance" which contains these playlists: Latin
-        Dance, HipHop Dance, and Electronic Dance. Spotification will create a
-        new "group" playlist containing all tracks from all playlists in the
-        group. You'll be able to access the group playlist on this site's music
-        player as well as directly on Spotify.
+        Combine related playlists together to make a "group playlist". For
+        example, you might create a group called "Dance" which contains these
+        playlists: Latin Dance, HipHop Dance, and Electronic Dance.
+        Spotification will create a new playlist for you containing all tracks
+        from all playlists in the group.
       </Typography>
       <h4>Copy a playlist</h4>
       <Typography>
         The "Copy" feature allows you to make a privately owned copy of a
-        playlist you're following. Once cloned, you can edit the new playlist as
-        you wish.
+        playlist you're following. You'll then be able to edit the new playlist
+        as you wish, without affecting the original.
       </Typography>
     </div>
   );

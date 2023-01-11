@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import { selectedGroupIdState } from "../recoil_state";
 import { Button } from "@mui/material";
 import { CreateGroupInput } from "./CreateGroupInput.react";
+import { SyncButton } from "./SyncButton.react";
 
 export const CreateGroup = () => {
   const [selectedGroupId, setSelectedGroupId] =
@@ -31,7 +32,10 @@ export const CreateGroup = () => {
 
   return (
     <div width="100%">
-      {showForm && <CreateGroupInput sx={{ mx: 1, mt: 1.5, p: 0 }} />}
+      <SyncButton />
+      {showForm && (
+        <CreateGroupInput sx={{ mx: 1, mt: 1.5, p: 0 }} header={true} />
+      )}
       {showForm
         ? styledButton(cancelClicked, "Cancel")
         : styledButton(createGroupClicked, "Create New Group")}

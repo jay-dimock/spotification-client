@@ -7,6 +7,7 @@ import {
   playlistsState,
   groupsState,
   selectedGroupIdState,
+  syncingState,
 } from "../recoil_state";
 import { useDeleteGroup } from "../services/useDeleteGroup";
 
@@ -15,6 +16,7 @@ export const DeleteGroupButton = (props) => {
   const [groups, setGroups] = useRecoilState(groupsState);
   const group = groups[props.groupId];
   const [, setSelectedGroupId] = useRecoilState(selectedGroupIdState);
+  const syncing = useRecoilValue(syncingState);
   const tokenInfo = useRecoilValue(tokenInfoState);
   const deleteGroup = useDeleteGroup();
 
@@ -44,6 +46,10 @@ export const DeleteGroupButton = (props) => {
     delete localGroups[group.spotify_id];
     setGroups(localGroups);
   };
+
+  if (syncing) {
+    return null;
+  }
 
   // to do: add confirmation modal
   return (

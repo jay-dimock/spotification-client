@@ -1,15 +1,16 @@
 import React from "react";
 import { APP_API_BASE } from "../constants/EnvConstants";
 import axios from "axios";
-import { useRecoilState } from "recoil";
-import { playlistsState, groupsState } from "../recoil_state";
-import { Typography, Button } from "@mui/material";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistsState, groupsState, syncingState } from "../recoil_state";
+import { Typography, Button, CircularProgress } from "@mui/material";
 import { useSyncSpotify } from "../services/useSyncSpotify";
 
 export const AddButton = (props) => {
   const { groupId, playlistId, clearSelection } = props;
   const [groups, setGroups] = useRecoilState(groupsState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
+  const syncing = useRecoilValue(syncingState);
   const sync = useSyncSpotify();
 
   const getUpdatedGroup = () => {
@@ -58,13 +59,23 @@ export const AddButton = (props) => {
       .catch((err) => console.log(err));
   };
 
+  const sx = { mt: 1, p: 0 };
+
+  if (syncing) {
+    return (
+      <Button variant="outlined" size="small" sx={sx}>
+        <CircularProgress
+          color="primary"
+          size={20}
+          style={{ position: "absolute" }}
+        />
+        Syncing
+      </Button>
+    );
+  }
+
   return (
-    <Button
-      variant="contained"
-      size="small"
-      sx={{ mt: 1, p: 0, display: "block" }}
-      onClick={add}
-    >
+    <Button variant="contained" size="small" sx={sx} onClick={add}>
       <Typography variant="subtitle2">Add</Typography>
     </Button>
   );

@@ -23,6 +23,7 @@ import {
   Box,
   Container,
   Typography,
+  Tooltip,
   Link,
   List,
   ListItem,
@@ -76,12 +77,14 @@ export const Playlists = () => {
                 {`${p.total_tracks} tracks`}
               </Typography>
               {p.owner_id !== user.id && (
-                <Typography variant="subtitle2" paddingBottom={1}>
-                  Owned by {p.owner_name}{" "}
-                  <Link variant="subtitle2" component="button">
-                    copy
-                  </Link>
-                </Typography>
+                <Tooltip title="Make a privately owned copy of this playlist that you can edit as you wish.">
+                  <Typography variant="subtitle2" paddingBottom={1}>
+                    Owned by {p.owner_name}{" "}
+                    <Link variant="subtitle2" component="button">
+                      copy
+                    </Link>
+                  </Typography>
+                </Tooltip>
               )}
               {p.group_ids.length === 0 ? (
                 <Typography variant="subtitle2" paddingBottom={1}>
