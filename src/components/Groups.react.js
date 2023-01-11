@@ -28,9 +28,9 @@ import { RemoveButton } from "./RemoveButton.react";
 import { AddPlaylistToGroup } from "./AddPlaylistToGroup.react";
 import { CreateGroup } from "./CreateGroup.react";
 import { ViewTabs } from "./ViewTabs.react";
+import { DeleteGroupButton } from "./DeleteGroupButton";
 
 export const Groups = () => {
-  const user = useRecoilValue(userState);
   const playlists = useRecoilValue(playlistsState);
   const groups = useRecoilValue(groupsState);
   const [, setView] = useRecoilState(viewState);
@@ -69,11 +69,12 @@ export const Groups = () => {
               ></ListItemButton>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="subtitle2" paddingBottom={1}>
+              <Typography variant="subtitle2">
                 <b>Full name in Spotify: {g.full_name}</b>
+                <DeleteGroupButton groupId={g.spotify_id} />
               </Typography>
               {g.playlist_ids.length === 0 ? (
-                <Typography variant="subtitle2">
+                <Typography variant="subtitle2" paddingBottom={1}>
                   This group currently has no individual playlists.
                 </Typography>
               ) : (

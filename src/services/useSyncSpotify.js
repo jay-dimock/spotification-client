@@ -31,24 +31,25 @@ export const useSyncSpotify = () => {
       console.log("SYNCING GROUP: " + group.name);
       const combinedTracks = await getCombinedTrackUris(group);
       const uniqueCombinedTracks = new Set(combinedTracks);
-      console.log("combinedTracks length", [...uniqueCombinedTracks].length);
 
       const groupTracks = await getTracks(currentTokenInfo, group.spotify_id);
       const uniqueGroupTracks = new Set(groupTracks);
-      console.log("groupTracks length", [...uniqueGroupTracks].length);
 
       const tracksToAdd = [...uniqueCombinedTracks].filter(
         (t) => !uniqueGroupTracks.has(t)
       );
-      console.log("tracksToAdd.length", tracksToAdd.length);
-
       const tracksToRemove = [...uniqueGroupTracks].filter(
         (t) => !uniqueCombinedTracks.has(t)
       );
-      console.log("tracksToRemove.length", tracksToRemove.length);
 
       await addTracks(currentTokenInfo, group.spotify_id, tracksToAdd);
+      if (tracksToAdd.length > 0) {
+        console.log(`tracks added: ${tracksToAdd.length}`);
+      }
       await removeTracks(currentTokenInfo, group.spotify_id, tracksToRemove);
+      if (tracksToRemove.length > 0) {
+        console.log(`tracks removed: ${tracksToRemove.length}`);
+      }
     }
 
     setSyncing(false);

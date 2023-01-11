@@ -49,8 +49,7 @@ export const AddButton = (props) => {
     const updatedGroup = getUpdatedGroup();
     axios
       .put(`${APP_API_BASE}/groups/${groupId}`, updatedGroup.playlist_ids)
-      .then((res) => {
-        // console.log(res);
+      .then(() => {
         updateRecoil();
         clearSelection(); // clears selection from dropdown
         // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.

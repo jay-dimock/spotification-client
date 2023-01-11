@@ -51,7 +51,7 @@ export const RemoveButton = (props) => {
       .put(`${APP_API_BASE}/groups/${groupId}`, updatedGroup.playlist_ids)
       .then((res) => {
         updateRecoil();
-        // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
+        // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function soon enough.
         sync([updatedGroup]);
       })
       .catch((err) => console.log(err));
