@@ -55,7 +55,7 @@ export const RemoveButton = (props) => {
         // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function soon enough.
         sync([updatedGroup]);
       })
-      .catch((err) => console.log(err));
+      .catch(console.error);
   };
 
   if (syncing) {

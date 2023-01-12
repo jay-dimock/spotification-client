@@ -108,6 +108,28 @@ export const useLoadInitialSpotifyData = () => {
       return;
     }
 
+    const getSanitizedGroups = async (groups, playlists) => {
+      // if the user deleted/unfollowed an individual playlist in Spotify,
+      // it needs to be removed from any groups it belongs to.
+      const playlistIds = new Set(playlists.map((p) => p.spotify_id));
+      for (const group of groups) {
+        const originalLength = group.playlist_ids.length;
+        group.playlist_ids = group.playlist_ids.filter((pid) =>
+          playlistIds.has(pid)
+        );
+        if (group.playlist_ids.length < originalLength) {
+          axios
+            .put(
+              `${APP_API_BASE}/groups/${group.spotify_id}`,
+              group.playlist_ids
+            )
+            .then(() => {})
+            .catch(console.error);
+        }
+      }
+      return groups;
+    };
+
     setTokenInfo(newTokenInfo);
 
     const apiData = await axios
@@ -115,9 +137,8 @@ export const useLoadInitialSpotifyData = () => {
       .then((res) => res.data)
       .catch(console.error);
 
-    const stateData = await getGroupsAndPlaylists(apiData);
-
-    const { groups, playlists } = stateData;
+    const { groups, playlists } = await getGroupsAndPlaylists(apiData);
+    const sanitizedGroups = await getSanitizedGroups(groups, playlists);
 
     playlists.sort((a, b) =>
       a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
@@ -129,15 +150,15 @@ export const useLoadInitialSpotifyData = () => {
       )
     );
 
-    groups.sort((a, b) =>
+    sanitizedGroups.sort((a, b) =>
       a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
     );
     setGroups(
       Object.fromEntries(
         // convert to dictionary
-        groups.map((g) => [g.spotify_id, g])
+        sanitizedGroups.map((g) => [g.spotify_id, g])
       )
     );
-    await sync(groups, newTokenInfo);
+    await sync(sanitizedGroups, newTokenInfo);
   };
 };

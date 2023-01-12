@@ -94,7 +94,7 @@ export const Groups = () => {
                           onClick={handlePlaylistClicked}
                           sx={{ paddingLeft: 1 }}
                         >
-                          {playlists[playlistId].name}
+                          {playlists[playlistId]?.name ?? playlistId}
                         </Link>
                       </ListItem>
                     ))}
