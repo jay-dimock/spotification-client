@@ -60,6 +60,18 @@ const syncingState = atom({
   effects: [persistAtom], // todo: evaluate if this could cause problems
 });
 
+const unfollowPlaylistAfterCopyState = atom({
+  key: "unfollowPlaylistAfterCopyState",
+  default: false,
+  effects: [persistAtom],
+});
+
+const addCopiedPlaylistToOriginalGroupsState = atom({
+  key: "addCopiedPlaylistToOriginalGroupsState",
+  default: true,
+  effects: [persistAtom],
+});
+
 export {
   viewState,
   tokenInfoState,
@@ -69,4 +81,6 @@ export {
   groupsState,
   selectedGroupIdState,
   syncingState,
+  unfollowPlaylistAfterCopyState,
+  addCopiedPlaylistToOriginalGroupsState,
 };

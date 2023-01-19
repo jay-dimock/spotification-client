@@ -1,62 +1,46 @@
 import React from "react";
-import { APP_API_BASE } from "../constants/EnvConstants";
-import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { playlistsState, groupsState, syncingState } from "../recoil_state";
 import { Typography, Button, CircularProgress } from "@mui/material";
 import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useUpdateGroup } from "../services/useUpdateGroup";
+import { useUpdateRecoilGroup } from "../services/useUpdateRecoilGroup";
 
 export const AddButton = (props) => {
   const { groupId, playlistId, clearSelection } = props;
-  const [groups, setGroups] = useRecoilState(groupsState);
-  const [playlists, setPlaylists] = useRecoilState(playlistsState);
+  const groups = useRecoilValue(groupsState);
+  const playlists = useRecoilValue(playlistsState);
   const syncing = useRecoilValue(syncingState);
   const sync = useSyncSpotify();
+  const updateGroup = useUpdateGroup();
+  const updateRecoilGroup = useUpdateRecoilGroup();
 
-  const getUpdatedGroup = () => {
-    const newPlaylistIds = [...groups[groupId].playlist_ids, playlistId];
-    return {
-      ...groups[groupId],
-      playlist_ids: [...new Set(newPlaylistIds)],
-    };
-  };
-
-  const updateRecoil = () => {
-    const newGroupIds = [...playlists[playlistId].group_ids, groupId];
-    const updatedPlaylist = {
-      ...playlists[playlistId],
-      group_ids: [...new Set(newGroupIds)],
-    };
-    const localPlaylists = { ...playlists };
-    localPlaylists[playlistId] = updatedPlaylist;
-    setPlaylists(localPlaylists);
-
-    const localGroups = { ...groups };
-    if (!localGroups[groupId]) {
-      throw new Error(
-        "Cannot update state: group is missing from state. Group ID: " + groupId
-      );
-    } else {
-      localGroups[groupId] = getUpdatedGroup();
-    }
-    setGroups(localGroups);
-  };
-
-  const add = () => {
-    if (!groupId || !playlistId) {
-      console.error("groupId or playlistId is missing");
+  const add = async () => {
+    const updatedPlaylistIdsForGroup = [
+      ...groups[groupId].playlist_ids,
+      playlistId,
+    ];
+    const updatedGroup = await updateGroup(
+      groups[groupId],
+      updatedPlaylistIdsForGroup
+    );
+    if (!updatedGroup) {
       return;
     }
-    const updatedGroup = getUpdatedGroup();
-    axios
-      .put(`${APP_API_BASE}/groups/${groupId}`, updatedGroup.playlist_ids)
-      .then(() => {
-        updateRecoil();
-        clearSelection(); // clears selection from dropdown
-        // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
-        sync([updatedGroup]);
-      })
-      .catch((err) => console.log(err));
+    const updatedGroupIdsForPlaylist = [
+      ...playlists[playlistId].group_ids,
+      groupId,
+    ];
+    updateRecoilGroup(
+      playlistId,
+      groupId,
+      updatedGroup,
+      updatedGroupIdsForPlaylist
+    );
+    clearSelection(); // clears selection from dropdown
+
+    // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
+    sync([updatedGroup]);
   };
 
   const sx = { mt: 1, p: 0 };

@@ -17,7 +17,7 @@ import {
 } from "./Accordion.react";
 import { AddGroupToPlaylist } from "./AddGroupToPlaylist.react";
 import { RemoveButton } from "./RemoveButton.react";
-import { CopyButton } from "./CopyButton";
+import { CopyPlaylist } from "./CopyPlaylist";
 import { ViewTabs } from "./ViewTabs.react";
 import { accordionContent } from "../styles";
 import {
@@ -76,11 +76,7 @@ export const Playlists = () => {
               <Typography variant="subtitle2" paddingBottom={1}>
                 {`${p.total_tracks} tracks`}
               </Typography>
-              {p.owner_id !== user.id && (
-                <Typography variant="subtitle2" paddingBottom={1}>
-                  Owned by {p.owner_name} <CopyButton playlist={p} />
-                </Typography>
-              )}
+
               {p.group_ids.length === 0 ? (
                 <Typography variant="subtitle2" paddingBottom={1}>
                   This playlist does not currently belong to any group
@@ -111,8 +107,15 @@ export const Playlists = () => {
                   </List>
                 </Typography>
               )}
-
               <AddGroupToPlaylist playlistId={p.spotify_id} />
+              {p.owner_id !== user.id && (
+                <>
+                  <Typography variant="subtitle2" paddingTop={1}>
+                    This playlist is owned by {p.owner_name}{" "}
+                  </Typography>
+                  <CopyPlaylist playlist={p} />
+                </>
+              )}
             </AccordionDetails>
           </CustomAccordion>
         ))}

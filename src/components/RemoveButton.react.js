@@ -1,61 +1,45 @@
 import React from "react";
 import { RemoveCircleOutline } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { APP_API_BASE } from "../constants/EnvConstants";
-import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { playlistsState, groupsState, syncingState } from "../recoil_state";
 import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useUpdateGroup } from "../services/useUpdateGroup";
+import { useUpdateRecoilGroup } from "../services/useUpdateRecoilGroup";
 
 export const RemoveButton = (props) => {
   const { tooltip, groupId, playlistId } = props;
-  const [groups, setGroups] = useRecoilState(groupsState);
-  const [playlists, setPlaylists] = useRecoilState(playlistsState);
-  const sync = useSyncSpotify();
+  const groups = useRecoilValue(groupsState);
+  const playlists = useRecoilValue(playlistsState);
   const syncing = useRecoilValue(syncingState);
+  const sync = useSyncSpotify();
+  const updateGroup = useUpdateGroup();
+  const updateRecoilGroup = useUpdateRecoilGroup();
 
-  const getUpdatedGroup = () => {
-    const updatedPlaylistIds = [...groups[groupId].playlist_ids].filter(
+  const remove = async () => {
+    const updatedPlaylistIdsForGroup = [...groups[groupId].playlist_ids].filter(
       (p) => p !== playlistId
     );
-    return {
-      ...groups[groupId],
-      playlist_ids: [...new Set(updatedPlaylistIds)],
-    };
-  };
-
-  const updateRecoil = () => {
-    const updatedGroup = getUpdatedGroup();
-    const localGroups = { ...groups };
-    localGroups[groupId] = updatedGroup;
-    setGroups(localGroups);
-
-    const updatedGroupIds = [...playlists[playlistId].group_ids].filter(
-      (g) => g !== groupId
+    const updatedGroup = await updateGroup(
+      groups[groupId],
+      updatedPlaylistIdsForGroup
     );
-    const updatedPlaylist = {
-      ...playlists[playlistId],
-      group_ids: [...updatedGroupIds],
-    };
-    const localPlaylists = { ...playlists };
-    localPlaylists[playlistId] = updatedPlaylist;
-    setPlaylists(localPlaylists);
-  };
-
-  const remove = () => {
-    if (!groupId || !playlistId) {
-      console.error("groupId or playlistId is missing");
+    if (!updatedGroup) {
       return;
     }
-    const updatedGroup = getUpdatedGroup();
-    axios
-      .put(`${APP_API_BASE}/groups/${groupId}`, updatedGroup.playlist_ids)
-      .then((res) => {
-        updateRecoil();
-        // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function soon enough.
-        sync([updatedGroup]);
-      })
-      .catch(console.error);
+    const updatedGroupIdsForPlaylist = [
+      ...playlists[playlistId].group_ids,
+    ].filter((g) => g !== groupId);
+
+    updateRecoilGroup(
+      playlistId,
+      groupId,
+      updatedGroup,
+      updatedGroupIdsForPlaylist
+    );
+
+    // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
+    sync([updatedGroup]);
   };
 
   if (syncing) {

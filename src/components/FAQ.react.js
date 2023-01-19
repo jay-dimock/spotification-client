@@ -76,7 +76,8 @@ const content = [
         the group playlist with individual changes, you'll need to connect to
         the Spotification website. Whenever you sign in here, this site will
         check for changes to individual playlists and update the associated
-        group playlists accordingly.
+        group playlists accordingly. See topic: "How do group playlists stay in
+        sync with their individual playlists?"
       </Typography>
     ),
   },
@@ -97,8 +98,9 @@ const content = [
           </li>
           <li>
             <Typography mb={1}>
-              Whenever you add or remove a group's individual playlists, all of
-              that group's tracks will automaticically be synced on Spotify.
+              Whenever you add or remove an individual playlist from a
+              Spotification group, all of that group's tracks will
+              automaticically be synced on Spotify.
             </Typography>
           </li>
           <li>
