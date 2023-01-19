@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { DeleteForever } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   tokenInfoState,
@@ -19,6 +19,7 @@ export const DeleteGroupButton = (props) => {
   const syncing = useRecoilValue(syncingState);
   const tokenInfo = useRecoilValue(tokenInfoState);
   const deleteGroup = useDeleteGroup();
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const deleteGroupPlaylist = async () => {
     const deleted = await deleteGroup(tokenInfo, group?.spotify_id);
@@ -51,17 +52,44 @@ export const DeleteGroupButton = (props) => {
     return null;
   }
 
-  // to do: add confirmation modal
+  if (!showConfirmation) {
+    return (
+      <Tooltip title={"Delete group playlist: " + group.name}>
+        <IconButton onClick={() => setShowConfirmation(true)}>
+          <DeleteForever
+            sx={{
+              color: "black",
+              "&:hover": { color: "red" },
+            }}
+          />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+
   return (
-    <Tooltip title={"Delete group playlist: " + group.name}>
-      <IconButton onClick={deleteGroupPlaylist}>
-        <DeleteForever
-          sx={{
-            color: "black",
-            "&:hover": { color: "red" },
-          }}
-        />
-      </IconButton>
-    </Tooltip>
+    <Box mb={2}>
+      <Typography variant="subtitle2">
+        Are you sure you want to delete this group playlist? Its individual
+        playlists will NOT be deleted, but the group playlist WILL be removed
+        from both Spotification and Spotify.
+      </Typography>
+      <Button
+        variant="contained"
+        size="small"
+        sx={{ py: 0 }}
+        onClick={deleteGroupPlaylist}
+      >
+        Delete
+      </Button>
+      <Button
+        variant="contained"
+        size="small"
+        sx={{ ml: 1, py: 0 }}
+        onClick={() => setShowConfirmation(false)}
+      >
+        Cancel
+      </Button>
+    </Box>
   );
 };

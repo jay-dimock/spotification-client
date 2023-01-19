@@ -31,7 +31,7 @@ export const AddGroupToPlaylist = (props) => {
         <Select
           labelId="select-group"
           id="select-group"
-          value={selectedGroupId}
+          value={groups[selectedGroupId] ? selectedGroupId : ""}
           label="Add to group"
           onChange={handleGroupChange}
           sx={{ width: "100% - 5em" }}

@@ -5,7 +5,7 @@ import { useGetTracks } from "./useGetTracks";
 import { useAddTracks } from "./useAddTracks";
 import { useRemoveTracks } from "./useRemoveTracks";
 
-export const useSyncSpotify = () => {
+export const useSyncSpotifyGroupTracks = () => {
   const [, setSyncing] = useRecoilState(syncingState);
   const recoilTokenInfo = useRecoilValue(tokenInfoState);
   const getRefreshedToken = useGetRefreshedToken();

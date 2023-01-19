@@ -19,7 +19,7 @@ import { useGetTracks } from "../services/useGetTracks";
 import { useAddTracks } from "../services/useAddTracks";
 import { useGetRefreshedToken } from "../services/useGetRefreshedToken";
 import { useUpdateGroup } from "../services/useUpdateGroup";
-import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useSyncSpotifyGroupTracks } from "../services/useSyncSpotifyGroupTracks";
 
 export const CopyButton = (props) => {
   const {
@@ -41,7 +41,7 @@ export const CopyButton = (props) => {
   const getTracks = useGetTracks();
   const addTracks = useAddTracks();
   const updateGroup = useUpdateGroup();
-  const sync = useSyncSpotify();
+  const syncGroupTracks = useSyncSpotifyGroupTracks();
   const getRefreshedToken = useGetRefreshedToken();
 
   const copyPlaylist = async () => {
@@ -53,6 +53,9 @@ export const CopyButton = (props) => {
     const payload = {
       name: newPlaylistName,
       public: false,
+      description:
+        "This playlist was created from the Spotification site. " +
+        `It\'s a privately owned copy of \"${playlist.name}\" by ${playlist.owner_name}.`,
     };
 
     const newPlaylist = await axios
@@ -90,7 +93,7 @@ export const CopyButton = (props) => {
     updateRecoil(newPlaylist, tracks.length, unfollowSuccess, updatedGroups);
     if (updatedGroups) {
       const groupsToSync = playlist.group_ids.map((gid) => updatedGroups[gid]);
-      sync(groupsToSync);
+      syncGroupTracks(groupsToSync);
     }
   };
 

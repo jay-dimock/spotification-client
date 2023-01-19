@@ -31,7 +31,7 @@ export const AddPlaylistToGroup = (props) => {
         <Select
           labelId="select-playlist"
           id="select-playlist"
-          value={selectedPlaylistId}
+          value={playlists[selectedPlaylistId] ? selectedPlaylistId : ""}
           label="Add individual playlist"
           onChange={handlePlaylistChange}
           sx={{ width: "100% - 10em" }}

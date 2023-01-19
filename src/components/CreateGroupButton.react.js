@@ -15,14 +15,14 @@ import {
 import { createGroupName } from "../util/groupNameConfig";
 import { Button, Typography } from "@mui/material";
 import { useGetRefreshedToken } from "../services/useGetRefreshedToken";
-import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useSyncSpotifyGroupTracks } from "../services/useSyncSpotifyGroupTracks";
 
 export const CreateGroupButton = (props) => {
   const { newGroupName, setNewGroupName, setInputErrorMessage, playlistId } =
     props;
   const tokenInfo = useRecoilValue(tokenInfoState);
   const getRefreshedToken = useGetRefreshedToken();
-  const sync = useSyncSpotify();
+  const syncGroupTracks = useSyncSpotifyGroupTracks();
   const [groups, setGroups] = useRecoilState(groupsState);
   const [, setSelectedGroupId] = useRecoilState(selectedGroupIdState);
   const [playlists, setPlaylists] = useRecoilState(playlistsState);
@@ -65,15 +65,23 @@ export const CreateGroupButton = (props) => {
       setInputErrorMessage("New group name cannot be blank");
       return;
     }
+    const existingNames = new Set(Object.values(groups).map((g) => g.name));
+    if (existingNames.has(trimmed)) {
+      setInputErrorMessage("A group already exists with this name.");
+      return;
+    }
+
     const refreshedTokenInfo = await getRefreshedToken(tokenInfo);
     const headers = spotifyHeaders(refreshedTokenInfo.access_token);
     const payload = {
       name: createGroupName(trimmed),
       public: false,
       description:
-        "This playlist was created on the Spotification " +
+        "This playlist was created from the Spotification " +
         "site by combining other playlists. To update/sync, connect to " +
-        "playlistgroups.com. Don't add/remove tracks directly!",
+        "playlistgroups.com. Don't add/remove tracks directly: any changes " +
+        "made directly in Spotify will be overwritten next time you " +
+        "connect to Spotification.",
     };
     axios
       .post(SPOTIFY_ENDPOINT_PLAYLISTS, payload, { headers })
@@ -93,7 +101,7 @@ export const CreateGroupButton = (props) => {
           .then(() => {
             if (playlistId) {
               const groupObject = getNewGroupObject(apiPayload.spotifyId);
-              sync([groupObject], refreshedTokenInfo);
+              syncGroupTracks([groupObject], refreshedTokenInfo);
             }
             updateRecoil(apiPayload.spotifyId);
             setSelectedGroupId("");

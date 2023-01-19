@@ -111,7 +111,7 @@ export const Playlists = () => {
               {p.owner_id !== user.id && (
                 <>
                   <Typography variant="subtitle2" paddingTop={1}>
-                    This playlist is owned by {p.owner_name}{" "}
+                    This playlist is owned by {p.owner_name}.
                   </Typography>
                   <CopyPlaylist playlist={p} />
                 </>

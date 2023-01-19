@@ -2,7 +2,7 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { playlistsState, groupsState, syncingState } from "../recoil_state";
 import { Typography, Button, CircularProgress } from "@mui/material";
-import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useSyncSpotifyGroupTracks } from "../services/useSyncSpotifyGroupTracks";
 import { useUpdateGroup } from "../services/useUpdateGroup";
 import { useUpdateRecoilGroup } from "../services/useUpdateRecoilGroup";
 
@@ -11,9 +11,13 @@ export const AddButton = (props) => {
   const groups = useRecoilValue(groupsState);
   const playlists = useRecoilValue(playlistsState);
   const syncing = useRecoilValue(syncingState);
-  const sync = useSyncSpotify();
+  const syncGroupTracks = useSyncSpotifyGroupTracks();
   const updateGroup = useUpdateGroup();
   const updateRecoilGroup = useUpdateRecoilGroup();
+
+  if (!playlists[playlistId] || !groups[groupId]) {
+    return null;
+  }
 
   const add = async () => {
     const updatedPlaylistIdsForGroup = [
@@ -40,7 +44,7 @@ export const AddButton = (props) => {
     clearSelection(); // clears selection from dropdown
 
     // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
-    sync([updatedGroup]);
+    syncGroupTracks([updatedGroup]);
   };
 
   const sx = { mt: 1, p: 0 };

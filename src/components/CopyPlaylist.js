@@ -9,12 +9,13 @@ import { CopyForm } from "./CopyForm";
 import { CopyButton } from "./CopyButton";
 
 export const CopyPlaylist = (props) => {
+  const { playlist } = props;
   const playlists = useRecoilValue(playlistsState);
   const unfollowPlaylistAfterCopy = useRecoilValue(
     unfollowPlaylistAfterCopyState
   );
   const [showForm, setShowForm] = useState(false);
-  const { playlist } = props;
+
   const defaultCopyName = playlist.name + " (my copy)";
   const [newPlaylistName, setNewPlaylistName] = useState(defaultCopyName);
   const [inputErrorMessage, setInputErrorMessage] = useState("");

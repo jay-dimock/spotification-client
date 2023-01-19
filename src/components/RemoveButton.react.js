@@ -3,7 +3,7 @@ import { RemoveCircleOutline } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { playlistsState, groupsState, syncingState } from "../recoil_state";
-import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useSyncSpotifyGroupTracks } from "../services/useSyncSpotifyGroupTracks";
 import { useUpdateGroup } from "../services/useUpdateGroup";
 import { useUpdateRecoilGroup } from "../services/useUpdateRecoilGroup";
 
@@ -12,7 +12,7 @@ export const RemoveButton = (props) => {
   const groups = useRecoilValue(groupsState);
   const playlists = useRecoilValue(playlistsState);
   const syncing = useRecoilValue(syncingState);
-  const sync = useSyncSpotify();
+  const syncGroupTracks = useSyncSpotifyGroupTracks();
   const updateGroup = useUpdateGroup();
   const updateRecoilGroup = useUpdateRecoilGroup();
 
@@ -39,7 +39,7 @@ export const RemoveButton = (props) => {
     );
 
     // have to use locally compiled new group here because the recoil update doesn't trigger a re-render of the sync function in time.
-    sync([updatedGroup]);
+    syncGroupTracks([updatedGroup]);
   };
 
   if (syncing) {

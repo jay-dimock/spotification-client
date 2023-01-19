@@ -1,16 +1,36 @@
 import React from "react";
-import { useRecoilValue } from "recoil";
-import { groupsState, syncingState } from "../recoil_state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  groupsState,
+  playlistsState,
+  syncingState,
+  tokenInfoState,
+  userState,
+} from "../recoil_state";
 import { Button, CircularProgress } from "@mui/material";
-import { useSyncSpotify } from "../services/useSyncSpotify";
+import { useGetRefreshedToken } from "../services/useGetRefreshedToken";
+import { useGetSpotifyGroupsAndPlaylists } from "../services/useGetSpotifyGroupsAndPlaylists";
+import { useSyncSpotifyGroupTracks } from "../services/useSyncSpotifyGroupTracks";
 
 export const SyncButton = () => {
   const syncing = useRecoilValue(syncingState);
-  const groups = useRecoilValue(groupsState);
-  const sync = useSyncSpotify();
+  const [, setPlaylists] = useRecoilState(playlistsState);
+  const [, setGroups] = useRecoilState(groupsState);
+  const recoilTokenInfo = useRecoilValue(tokenInfoState);
+  const user = useRecoilValue(userState);
+  const getRefreshedToken = useGetRefreshedToken();
+  const getSpotifyGroupsAndPlaylists = useGetSpotifyGroupsAndPlaylists();
+  const syncGroupTracks = useSyncSpotifyGroupTracks();
 
-  const syncClicked = () => {
-    sync(Object.values(groups), null);
+  const syncClicked = async () => {
+    const newTokenInfo = await getRefreshedToken(recoilTokenInfo);
+    const { groupsDict, playlistsDict } = await getSpotifyGroupsAndPlaylists(
+      newTokenInfo,
+      user.id
+    );
+    setPlaylists(playlistsDict);
+    setGroups(groupsDict);
+    syncGroupTracks(Object.values(groupsDict), null);
   };
 
   if (syncing) {
