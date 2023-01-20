@@ -42,7 +42,7 @@ export const useGetSpotifyGroupsAndPlaylists = () => {
         })
       );
 
-      playlistsChunk.forEach((p) =>
+      playlistsChunk.forEach((p) => {
         playlists.push({
           spotify_id: p.id,
           name: p.name,
@@ -51,10 +51,33 @@ export const useGetSpotifyGroupsAndPlaylists = () => {
           total_tracks: p.tracks.total,
           group_ids:
             apiData.playlists[p.id] != null ? apiData.playlists[p.id] : [],
-        })
-      );
+        });
+      });
 
       endpoint = data.next;
+    }
+
+    // if the user deleted a group playlist in Spotify, it needs to be
+    // removed from the groups list for any individual playlist and also
+    // deleted from the Spotification DB.
+    const groupIds = new Set(groups.map((g) => g.spotify_id));
+    const dbGroupIds = new Set(Object.keys(apiData.groups));
+    for (const dbGroupId of dbGroupIds) {
+      if (groupIds.has(dbGroupId)) {
+        continue;
+      }
+      const groupPlaylistIds = apiData.groups[dbGroupId];
+      groupPlaylistIds.forEach((gpid) => {
+        const playlist = playlists.find((p) => p.spotify_id === gpid);
+        const index = playlist.group_ids.indexOf(dbGroupId);
+        playlist.group_ids.splice(index, 1);
+      });
+      axios
+        .delete(`${APP_API_BASE}/groups/${dbGroupId}`)
+        .then(() => true)
+        .catch((err) => {
+          console.error(err);
+        });
     }
 
     // if the user deleted/unfollowed an individual playlist in Spotify,

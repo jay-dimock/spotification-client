@@ -30,7 +30,7 @@ export const SyncButton = () => {
     );
     setPlaylists(playlistsDict);
     setGroups(groupsDict);
-    syncGroupTracks(Object.values(groupsDict), null);
+    syncGroupTracks(Object.values(groupsDict), newTokenInfo);
   };
 
   if (syncing) {
