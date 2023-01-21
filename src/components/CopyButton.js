@@ -55,7 +55,7 @@ export const CopyButton = (props) => {
       public: false,
       description:
         "This playlist was created from the Spotification site. " +
-        `It\'s a privately owned copy of \"${playlist.name}\" by ${playlist.owner_name}.`,
+        `It's a privately owned copy of "${playlist.name}" by ${playlist.owner_name}.`,
     };
 
     const newPlaylist = await axios

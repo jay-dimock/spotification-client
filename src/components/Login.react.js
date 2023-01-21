@@ -8,6 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { PrivacyPolicy } from "./PrivacyPolicy.react";
 
 export const Login = () => {
   const endpoint = `${APP_API_BASE}/auth/login`;
@@ -29,21 +30,7 @@ export const Login = () => {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography variant="paragraph">
-            If you allow access, here are some of the things we will be able to
-            do:
-          </Typography>
-          <ul>
-            <li>Get the names of all your playlists</li>
-            <li>Get the a list of all tracks in your playlists</li>
-            <li>Create new playlists for you</li>
-            <li>Play a set of tracks for you</li>
-          </ul>
-          <Typography variant="paragraph">
-            We will never sell your information. We will only use your email
-            address if we need to send you important information about the
-            Spotification site or your account.
-          </Typography>
+          <PrivacyPolicy />
         </AccordionDetails>
       </Accordion>
       <Typography mt={1}>

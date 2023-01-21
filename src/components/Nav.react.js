@@ -10,7 +10,7 @@ import {
   groupsState,
   syncingState,
 } from "../recoil_state";
-import { FAQ } from "../constants/ViewConstants";
+import { FAQ, ABOUT } from "../constants/ViewConstants";
 import { ListViewSetterButton } from "./ListViewSetterButton.react";
 
 import {
@@ -57,32 +57,48 @@ export const Nav = () => {
             {syncing && <Typography variant="subtitle2">syncing...</Typography>}
           </Typography>
 
-          {!user.id || !tokenInfo.access_token ? (
-            <Link href={`${APP_API_BASE}/auth/login`}>Connect to Spotify</Link>
-          ) : (
-            <Stack direction="row" spacing={2}>
-              <Avatar alt={user.display_name} src={user.image_url} />
-              <div>
-                <Typography>{user.display_name}</Typography>
-                <Typography variant="subtitle2">
-                  {view !== FAQ && (
-                    <Link component="button" onClick={() => setView(FAQ)}>
-                      FAQ
-                    </Link>
-                  )}
-                  {view === FAQ && (
-                    <ListViewSetterButton component="link">
-                      Manage
-                    </ListViewSetterButton>
-                  )}
-                  {" | "}
-                  <Link component="button" onClick={logout}>
-                    Disconnect
+          <>
+            {!user.id || !tokenInfo.access_token ? (
+              <Typography variant="subtitle2">
+                {view === FAQ ? (
+                  <Link onClick={() => setView(ABOUT)} href="#">
+                    Home
                   </Link>
-                </Typography>
-              </div>
-            </Stack>
-          )}
+                ) : (
+                  <Link onClick={() => setView(FAQ)} href="#">
+                    FAQ
+                  </Link>
+                )}
+                {" | "}
+                <Link href={`${APP_API_BASE}/auth/login`}>
+                  Connect to Spotify
+                </Link>
+              </Typography>
+            ) : (
+              <Stack direction="row" spacing={2}>
+                <Avatar alt={user.display_name} src={user.image_url} />
+                <div>
+                  <Typography>{user.display_name}</Typography>
+                  <Typography variant="subtitle2">
+                    {view !== FAQ && (
+                      <Link component="button" onClick={() => setView(FAQ)}>
+                        FAQ
+                      </Link>
+                    )}
+                    {view === FAQ && (
+                      <ListViewSetterButton component="link">
+                        Manage
+                      </ListViewSetterButton>
+                    )}
+                    {" | "}
+                    <Link component="button" onClick={logout}>
+                      Disconnect
+                    </Link>
+                  </Typography>
+                </div>
+              </Stack>
+            )}
+          </>
         </Toolbar>
       </Container>
       <div id="menu-divider"></div>

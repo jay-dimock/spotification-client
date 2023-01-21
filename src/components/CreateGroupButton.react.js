@@ -59,7 +59,7 @@ export const CreateGroupButton = (props) => {
     setGroups(localGroups);
   };
 
-  const addGroup = async () => {
+  const createGroup = async () => {
     const trimmed = newGroupName.trim();
     if (!trimmed) {
       setInputErrorMessage("New group name cannot be blank");
@@ -90,7 +90,6 @@ export const CreateGroupButton = (props) => {
           console.log("No ID came back from Spotify", res.data);
           return;
         }
-        console.log(res);
         const apiPayload = {
           spotifyId: res.data.id,
           userId: res.data.owner.id,
@@ -117,7 +116,7 @@ export const CreateGroupButton = (props) => {
       variant="contained"
       size="small"
       sx={{ mx: 1, mt: 1, display: "block" }}
-      onClick={addGroup}
+      onClick={createGroup}
     >
       <Typography variant="subtitle2">Save New Group</Typography>
     </Button>

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { prefixAndDelimiter } from "../util/groupNameConfig";
+import { PrivacyPolicy } from "./PrivacyPolicy.react";
 
 export const FAQ = () => {
   return (
@@ -60,25 +61,33 @@ const content = [
     q: "What happens when I add a playlist to an existing group?",
     a: (
       <Typography mb={1}>
-        All playlists from the playlist being added will be added to the group
-        playlist. If any of the tracks are already in the group playlist, they
-        will not be added again. You will immediately be able to see the changes
-        on the Spotify app/site.
+        All tracks from the playlist being added will be added to the group
+        playlist. If any of the tracks are already part of the group playlist,
+        they will not be added again. You will immediately be able to see the
+        changes on the Spotify app/site.
       </Typography>
     ),
   },
   {
     q: "Will group playlists automatically update when I make changes to the individual playlists they contain?",
     a: (
-      <Typography mb={1}>
-        When you add or remove a track on an individual playlist on Spotify,
-        that track will not instantly be added to the group playlist. To update
-        the group playlist with individual changes, you'll need to connect to
-        the Spotification website. Whenever you sign in here, this site will
-        check for changes to individual playlists and update the associated
-        group playlists accordingly. See topic: "How do group playlists stay in
-        sync with their individual playlists?"
-      </Typography>
+      <>
+        <Typography mb={1}>
+          When you add or remove a track on an individual playlist on Spotify,
+          that track will not instantly be added to the group playlist. To
+          update the group playlist with individual changes, you'll need to
+          connect to the Spotification website. Whenever you sign in here, this
+          site will check for changes to individual playlists and update the
+          associated group playlists accordingly.
+        </Typography>
+        <Typography mb={1}>
+          NOTE: do not try to add a track directly to a group playlist in
+          Spotify. Your changes will be overwritten the next time your groups
+          are synced on Spotification. Instead, add the track to an individual
+          playlist that is part of the group. See topic: "How do group playlists
+          stay in sync with their individual playlists?"
+        </Typography>
+      </>
     ),
   },
   {
@@ -111,6 +120,12 @@ const content = [
             </Typography>
           </li>
         </ol>
+        <Typography mb={1}>
+          NOTE: do not try to add a track directly to a group playlist in
+          Spotify. Your changes will be overwritten the next time your groups
+          are synced on Spotification. Instead, add the track to an individual
+          playlist that is part of the group.
+        </Typography>
       </>
     ),
   },
@@ -124,6 +139,49 @@ const content = [
   },
   {
     q: 'How does the "copy" feature work?',
-    a: <Typography mb={1}>Stay tuned...</Typography>,
+    a: (
+      <>
+        <Typography mb={1}>
+          The copy feature allows you to make a copy of a playlist, owned by
+          someone else, that you follow. When you click "make a copy", you'll be
+          given options name the new playlist, to unfollow the original playlist
+          (if desired), and add your new copy to any groups the original
+          playlist belonged to (if desired).
+        </Typography>
+        <Typography mb={1}>
+          Once you've confirmed, Spotification will gather all the tracks from
+          the followed playlist and add them to a newly created playlist, owned
+          by you. The original will then be unfollowed if you opted to do that,
+          and the new playlist will be added to any groups the original belonged
+          to, unless you indicated otherwise. You'll then be able to edit the
+          new playlist as you wish, without affecting the original.
+        </Typography>
+      </>
+    ),
+  },
+  {
+    q: "Why can't I find my group playlists on the Spotify site/app?",
+    a: (
+      <Typography mb={1}>
+        Make sure you are looking for the playlist by it's Spotify name, which
+        is usually prefaced by "{prefixAndDelimiter}". For example, if you named
+        your group "My favorites", it will appear in Spotify as "
+        {prefixAndDelimiter} My favorites."
+      </Typography>
+    ),
+  },
+  {
+    q: "Can I rename a group playlist?",
+    a: (
+      <Typography mb={1}>
+        You can rename a group playlist directly in Spotify. If you so choose,
+        you may remove the "{prefixAndDelimiter}" prefix; it will still sync
+        correctly with Spotification.
+      </Typography>
+    ),
+  },
+  {
+    q: "What is your privacy policy?",
+    a: <PrivacyPolicy />,
   },
 ];
