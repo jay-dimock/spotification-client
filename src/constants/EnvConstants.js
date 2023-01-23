@@ -1,6 +1,6 @@
 const SPOTIFY_BASE = "https://api.spotify.com/v1";
 
-export const APP_API_BASE = "http://localhost:8000/api/playlists";
+export const APP_API_BASE = process.env.REACT_APP_API_ENDPOINT;
 
 export const SPOTIFY_ENDPOINT_USER = SPOTIFY_BASE + "/me";
 

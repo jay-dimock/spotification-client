@@ -17,11 +17,6 @@ export const useSyncSpotifyGroupTracks = () => {
     setSyncing(true);
     let currentTokenInfo = tokenInfo ?? recoilTokenInfo;
 
-    const getValidPlaylistIds = () => {
-      // if the user deleted/unfollowed an individual playlist in Spotify,
-      // it needs to be removed from any groups it belongs to.
-    };
-
     const getCombinedTrackUris = async (group) => {
       currentTokenInfo = await getRefreshedToken(currentTokenInfo);
       const trackUris = [];
