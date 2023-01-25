@@ -12,13 +12,13 @@ import {
 } from "../recoil_state";
 import { FAQ, ABOUT } from "../constants/ViewConstants";
 import { ListViewSetterButton } from "./ListViewSetterButton.react";
+import { UserAvatar } from "./UserAvatar.react";
 
 import {
   Box,
   AppBar,
   Container,
   Toolbar,
-  IconButton,
   Typography,
   Avatar,
   Stack,
@@ -73,9 +73,17 @@ export const Nav = () => {
     <Link href={`${APP_API_BASE}/auth/login`}>Connect to Spotify</Link>
   );
 
+  const xsShow = { xs: "block", sm: "none" };
+  const xsHide = { xs: "none", sm: "block" };
+
   const loggedOutMenuItems = (
-    <Box sx={{ position: { xs: "static", sm: "absolute" }, right: 0 }}>
-      <Typography variant="subtitle2">
+    <Box
+      sx={{
+        position: { xs: "static", sm: "absolute" },
+        right: 0,
+      }}
+    >
+      <Typography variant="subtitle2" sx={{ ml: 1, mt: { xs: 0, sm: 2 } }}>
         {view === FAQ ? home : faq}
         {" | "}
         {connect}
@@ -85,26 +93,18 @@ export const Nav = () => {
 
   const loggedInMenuItems = (
     <Box sx={{ position: { xs: "static", sm: "absolute" }, right: 0 }}>
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{ display: "flex", alignItems: "center" }}
-      >
-        <Avatar
-          alt={user.display_name}
-          src={user.image_url}
-          sx={{ display: { xs: "none", sm: "block" } }}
-        />
-        <div>
+      <Stack direction="row" sx={{ display: "flex", alignItems: "center" }}>
+        <UserAvatar sx={{ mr: 1.5, display: xsHide }} />
+        <Box>
           <Typography sx={{ display: { xs: "none", sm: "block" } }}>
             {user.display_name}
           </Typography>
-          <Typography variant="subtitle2">
+          <Typography variant="subtitle2" sx={{ ml: { xs: 1, sm: 0 } }}>
             {view === FAQ ? manage : faq}
             {" | "}
             {disconnect}
           </Typography>
-        </div>
+        </Box>
       </Stack>
     </Box>
   );
@@ -115,16 +115,13 @@ export const Nav = () => {
       sx={{ alignItems: "center", mt: { xs: 2, sm: 0 } }}
       spacing={1}
     >
-      <Avatar
-        alt="S-logo"
-        src={logo}
-        sx={{ display: { xs: "none", sm: "block" } }}
-      />
-      <Avatar
-        alt={user.display_name}
-        src={user.image_url}
-        sx={{ display: { xs: "block", sm: "none" } }}
-      />
+      <Avatar alt="S-logo" src={logo} sx={{ display: xsHide }} />
+      {connected ? (
+        <UserAvatar sx={{ display: xsShow }} />
+      ) : (
+        <Avatar alt={"S-logo"} src={logo} sx={{ display: xsShow }} />
+      )}
+
       <Typography variant="h5">Spotification</Typography>
       {syncing && (
         <Typography variant="subtitle2" ml={2}>
