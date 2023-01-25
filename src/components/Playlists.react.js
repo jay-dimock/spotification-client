@@ -45,8 +45,6 @@ export const Playlists = () => {
     setView(MANAGE_GROUPS);
   };
 
-  // console.log(Object.values(groups).map((p) => p?.name));
-
   return (
     <Container maxWidth="sm" sx={{ padding: 0 }}>
       <ViewTabs />

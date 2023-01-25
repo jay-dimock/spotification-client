@@ -31,7 +31,7 @@ export const AddGroupToPlaylist = (props) => {
         <Select
           labelId="select-group"
           id="select-group"
-          value={groups[selectedGroupId] ? selectedGroupId : ""}
+          value={selectedGroupId}
           label="Add to group"
           onChange={handleGroupChange}
           sx={{ width: "100% - 5em" }}
@@ -46,7 +46,7 @@ export const AddGroupToPlaylist = (props) => {
               <Typography variant="subtitle2">{g.name}</Typography>
             </MenuItem>
           ))}
-          <MenuItem value={"new"}>
+          <MenuItem key={"new"} value={"new"}>
             <Typography variant="subtitle2">[ new group ]</Typography>
           </MenuItem>
         </Select>

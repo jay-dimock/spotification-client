@@ -33,10 +33,6 @@ export const Login = () => {
           <PrivacyPolicy />
         </AccordionDetails>
       </Accordion>
-      <Typography mt={1}>
-        You must use a PAID Spotify account.
-        <b> Free accounts won't work with this site.</b>
-      </Typography>
       <Button variant="contained" href={endpoint} sx={{ mt: 2 }}>
         <Typography>Connect to Spotify</Typography>
       </Button>

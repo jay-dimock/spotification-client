@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FormControl, TextField, Typography } from "@mui/material";
 import { CreateGroupButton } from "./CreateGroupButton.react";
 
 export const CreateGroupInput = (props) => {
   const [newGroupName, setNewGroupName] = useState("");
   const [inputErrorMessage, setInputErrorMessage] = useState("");
+  const inputRef = useRef();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      inputRef.current.focus();
+    }, 100);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const handleNewGroupChange = (event) => {
     setInputErrorMessage("");
     setNewGroupName(event.target.value);
+    inputRef.current?.focus();
   };
 
   const showCreateButton = newGroupName.trim().length > 0;
@@ -31,6 +42,7 @@ export const CreateGroupInput = (props) => {
           error={inputErrorMessage.length > 0}
           helperText={inputErrorMessage}
           size="small"
+          inputRef={inputRef}
         />
       </FormControl>
       {showCreateButton && (
